@@ -1,0 +1,90 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.hugo'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
+
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'kam6512'
+    groupId = 'com.orca.library'
+    artifactId = 'rx-permission'
+    publishVersion = '1.0.0'
+    desc = 'Android Permission Helper with Rx'
+    website = 'https://github.com/kam6512/RxPermission'
+    issueTracker = "https://github.com/kam6512/RxPermission/issues"
+    repository = "https://github.com/kam6512/RxPermission.git"
+}
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    compileOptions {
+        encoding = 'UTF-8'
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+}
+
+dependencies {
+    def ext = rootProject.ext;
+    Map<String, String> TestDependencies = ext.TestDependencies;
+    Map<String, String> GoogleDependencies = ext.GoogleDependencies;
+    Map<String, String> RxDependencies = ext.RxDependencies;
+    Map<String, String> UiDependencies = ext.UiDependencies;
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile TestDependencies.JUnit
+
+    compile GoogleDependencies.Google_SupportV4
+    compile GoogleDependencies.Google_AppCompatV7
+    compile GoogleDependencies.Google_Annotations
+
+    compile GoogleDependencies.Guava
+
+    compile RxDependencies.RxJava2
+    compile RxDependencies.RxAndroid2
+
+    compile UiDependencies.MaterialDialogs
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+
+        Map<String, String> ClassPaths = rootProject.ext.ClassPaths;
+        classpath ClassPaths.Gradle
+        classpath ClassPaths.Hugo
+        classpath ClassPaths.Retrolambda
+        classpath ClassPaths.APT
+    }
+}
+repositories {
+    mavenCentral()
+    maven {
+        url "http://repository.jetbrains.com/all"
+    }
+}

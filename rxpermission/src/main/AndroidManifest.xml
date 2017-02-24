@@ -1,0 +1,9 @@
+<manifest package="com.orca.kam.rxpermission"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name=".commons.PermissionActivity"
+            android:theme="@style/AppTheme"/>
+    </application>
+</manifest>
