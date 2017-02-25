@@ -69,6 +69,10 @@ public class PermissionUtil {
             READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE);
 
 
+    /**
+     * @param permission need to check Permission is Dangerous
+     * @return is Dangerous Permission
+     */
     public static boolean isDangerousPermission(String permission) {
         for (String dangerousPermission : dangerousPermissions) {
             if (dangerousPermission.equals(permission)) {
@@ -79,11 +83,21 @@ public class PermissionUtil {
     }
 
 
+    /**
+     * @param permissions need to filtering List
+     * @return Dangerous Permissions
+     * Filtering Normal Permission in list
+     */
     public static List<String> filteringNormalPermission(List<String> permissions) {
         return Lists.newArrayList(Iterables.filter(permissions, PermissionUtil::isDangerousPermission));
     }
 
 
+    /**
+     * @param permissions need to filtering List
+     * @return Normal Permissions
+     * Filtering Dangerous Permission in list
+     */
     public static List<String> filteringDangerousPermission(List<String> permissions) {
         return Lists.newArrayList(Iterables.filter(permissions, permission -> !isDangerousPermission(permission)));
     }
