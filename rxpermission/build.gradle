@@ -45,7 +45,6 @@ dependencies {
 
     compile GoogleDependencies.Google_SupportV4
     compile GoogleDependencies.Google_AppCompatV7
-    compile GoogleDependencies.Google_Annotations
 
     compile GoogleDependencies.Guava
 
