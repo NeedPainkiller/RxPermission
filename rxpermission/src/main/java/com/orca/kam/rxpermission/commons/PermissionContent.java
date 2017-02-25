@@ -3,6 +3,8 @@ package com.orca.kam.rxpermission.commons;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
@@ -12,7 +14,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  * @create 2017-02-16 - 오후 4:08
  */
 class PermissionContent implements Parcelable {
-    private String[] permissions;
+    private List<String> permissions;
     private String packageName;
     private String explanationMessage;
     private String explanationConfirmButtonText;
@@ -44,7 +46,7 @@ class PermissionContent implements Parcelable {
     }
 
 
-    PermissionContent(String[] permissions, String packageName,
+    PermissionContent(List<String> permissions, String packageName,
                       String explanationMessage, String explanationConfirmButtonText,
                       String deniedMessage, String deniedCloseButtonText,
                       String settingButtonText) {
@@ -58,7 +60,7 @@ class PermissionContent implements Parcelable {
     }
 
 
-    void setPermissions(String[] permissions) {
+    void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
 
@@ -93,7 +95,7 @@ class PermissionContent implements Parcelable {
     }
 
 
-    public String[] getPermissions() {
+    public List<String> getPermissions() {
         return permissions;
     }
 
@@ -139,7 +141,7 @@ class PermissionContent implements Parcelable {
 
 
     @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(permissions);
+        dest.writeStringList(permissions);
         dest.writeString(packageName);
         dest.writeString(explanationMessage);
         dest.writeString(explanationConfirmButtonText);
@@ -150,7 +152,7 @@ class PermissionContent implements Parcelable {
 
 
     private void readFromParcel(Parcel source) {
-        this.permissions = source.createStringArray();
+        this.permissions = source.createStringArrayList();
         this.packageName = source.readString();
         this.explanationMessage = source.readString();
         this.explanationConfirmButtonText = source.readString();

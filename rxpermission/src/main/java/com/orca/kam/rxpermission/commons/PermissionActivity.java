@@ -14,6 +14,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -59,7 +60,8 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
 
-    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQ_CODE_REQUEST_SETTING) checkPermissions(true);
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -86,7 +88,7 @@ public class PermissionActivity extends AppCompatActivity {
     private void checkPermissions(boolean fromOnActivityResult) {
         ArrayList<String> needPermissions = new ArrayList<>();
         boolean showRationale = false;
-        String[] permissions = content.getPermissions();
+        List<String> permissions = content.getPermissions();
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
                 needPermissions.add(permission);

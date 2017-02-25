@@ -8,15 +8,18 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.listener.PermissionListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 
 import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION_CONTENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
+import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicateStringInList;
 
 /**
  * Project RxPermission
@@ -184,6 +187,11 @@ public class AndroidPermission {
 
 
     public Observable<ArrayList<String>> requestPermission(String... permissions) {
+        return requestPermission(Lists.newArrayList(permissions));
+    }
+
+
+    public Observable<ArrayList<String>> requestPermission(List<String> permissions) {
         return Observable.create((ObservableOnSubscribe<ArrayList<String>>) subscriber -> {
             if (isEmpty(permissions)) {
                 subscriber.onError(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
@@ -207,7 +215,7 @@ public class AndroidPermission {
                             subscriber.onNext(deniedPermissions);
                         }
                     };
-                    content.setPermissions(permissions);
+                    content.setPermissions(removeDuplicateStringInList(permissions));
                     content.setPackageName(context.getPackageName());
                     startPermissionActivity();
                 }
