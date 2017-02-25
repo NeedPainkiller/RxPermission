@@ -3,19 +3,6 @@ apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 
-/*apply plugin: 'com.novoda.bintray-release'
-
-publish {
-    userOrg = 'kam6512'
-    groupId = 'com.orca.library'
-    artifactId = 'rx-permission'
-    publishVersion = '1.0.0'
-    desc = 'Android Permission Helper with Rx'
-    website = 'https://github.com/kam6512/RxPermission'
-    issueTracker = "https://github.com/kam6512/RxPermission/issues"
-    repository = "https://github.com/kam6512/RxPermission.git"
-}*/
-
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
