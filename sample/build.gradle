@@ -50,8 +50,8 @@ dependencies {
     compile RxDependencies.RxJava2
     compile RxDependencies.RxAndroid2
 
-    compile 'com.github.kam6512:RxPermission:0.1'
-//    compile project(':rxpermission')
+//    compile 'com.github.kam6512:RxPermission:0.1'
+    compile project(':rxpermission')
 }
 
 
