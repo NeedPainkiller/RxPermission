@@ -89,29 +89,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestBluetoothPermission() {
         Disposable disposable = androidPermission.requestPermission(
-                ACCESS_COARSE_LOCATION,
-                ACCESS_FINE_LOCATION,
-                BODY_SENSORS,
-                CALL_PHONE,
+                READ_CALENDAR, WRITE_CALENDAR,
                 CAMERA,
-                INTERNET,
-                PROCESS_OUTGOING_CALLS,
-                READ_CALENDAR,
-                READ_CALL_LOG,
-                READ_CONTACTS,
-                READ_EXTERNAL_STORAGE,
-                READ_PHONE_STATE,
-                READ_SMS,
-                RECEIVE_MMS,
-                RECEIVE_SMS,
-                RECEIVE_WAP_PUSH,
+                READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS,
+                ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION,
                 RECORD_AUDIO,
-                SEND_SMS,
-                USE_SIP,
-                WRITE_CALENDAR,
-                WRITE_CALL_LOG,
-                WRITE_CONTACTS,
-                WRITE_EXTERNAL_STORAGE)
+                READ_PHONE_STATE, CALL_PHONE,
+                READ_CALL_LOG, WRITE_CALL_LOG,
+                ADD_VOICEMAIL, USE_SIP,
+                PROCESS_OUTGOING_CALLS,
+                BODY_SENSORS,
+                SEND_SMS, RECEIVE_SMS, READ_SMS,
+                RECEIVE_WAP_PUSH, RECEIVE_MMS,
+                READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,
+                INTERNET)
                 .doOnSubscribe(disposable1 -> viewModel.updateConsoleLog("Request Bluetooth Permission"))
                 .subscribe(deniedPermissions -> {
                             for (String deniedPermission : deniedPermissions) {
