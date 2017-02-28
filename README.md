@@ -16,7 +16,7 @@ dependencies {
 
 
 
-### How to use
+## How to use
 ```java
 public class MainActivity extends AppCompatActivity {
 
@@ -50,5 +50,14 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
+## Example
+### All Permission (or Permissions) Granted
+![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20All%20Granted.gif?raw=true)
+
+### Permission (or Permissions) Denied
+![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20Denial.gif?raw=true)
+
+### More, Setting
+![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20Setting.gif?raw=true)
 
 ######## Developed by [kam6512](https://kam6512.github.io/)
