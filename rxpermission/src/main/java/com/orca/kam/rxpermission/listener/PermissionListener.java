@@ -1,6 +1,6 @@
 package com.orca.kam.rxpermission.listener;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project RxPermission
@@ -22,5 +22,5 @@ public interface PermissionListener {
      *
      * @param deniedPermissions The Denied Permissions from PermissionActivity
      */
-    void permissionDenied(ArrayList<String> deniedPermissions);
+    void permissionDenied(List<String> deniedPermissions);
 }
