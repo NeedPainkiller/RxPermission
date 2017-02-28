@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.listener.PermissionListener;
 
@@ -18,6 +16,7 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION_CONTENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
 import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPermission;
@@ -35,9 +34,9 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPerm
  */
 public class AndroidPermission {
 
-    private Context context;
-    private final PermissionContent content;
     private static PermissionListener listener;
+    private Context context;
+    private final PermissionContent content = new PermissionContent();
 
 
     /**
@@ -46,11 +45,19 @@ public class AndroidPermission {
      * @param context(Activity or Application) Get String Resource, Package name, start Permission Activity and check Permissions
      */
     public AndroidPermission(Context context) {
-
-        Log.e("AndroidPermission", "init");
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(context.getPackageName()), "Context is Invalid");
+        Preconditions.checkArgument(!isNullContext(context), "Context is Invalid");
         this.context = context;
-        content = new PermissionContent();
+    }
+
+
+    /**
+     * Check the Context is null or empty the Package Name
+     *
+     * @param context(Activity or Application) need to check
+     * @return context has null pointer or cannot get Package Name successful.. will be return true
+     */
+    private boolean isNullContext(Context context) {
+        return context == null || isNullOrEmpty(context.getPackageName());
     }
 
 
@@ -61,7 +68,7 @@ public class AndroidPermission {
      * @return Method chaining, AndroidPermission.
      */
     public AndroidPermission setExplanationMessage(String message) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(message),
+        Preconditions.checkArgument(!isNullOrEmpty(message),
                 "The text for ExplanationMessage is empty");
         content.setExplanationMessage(message);
         return this;
@@ -88,7 +95,7 @@ public class AndroidPermission {
      * @return Method chaining, AndroidPermission.
      */
     public AndroidPermission setExplanationConfirmButtonText(String buttonText) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(buttonText),
+        Preconditions.checkArgument(!isNullOrEmpty(buttonText),
                 "The text for explanationConfirmText is empty");
         content.setExplanationConfirmButtonText(buttonText);
         return this;
@@ -115,7 +122,7 @@ public class AndroidPermission {
      * @return Method chaining, AndroidPermission.
      */
     public AndroidPermission setDeniedMessage(String deniedMessage) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(deniedMessage),
+        Preconditions.checkArgument(!isNullOrEmpty(deniedMessage),
                 "The text for DeniedMessage is empty");
         content.setDeniedMessage(deniedMessage);
         return this;
@@ -142,7 +149,7 @@ public class AndroidPermission {
      * @return Method chaining, AndroidPermission.
      */
     public AndroidPermission setDeniedCloseButtonText(String deniedCloseButtonText) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(deniedCloseButtonText),
+        Preconditions.checkArgument(!isNullOrEmpty(deniedCloseButtonText),
                 "The text for DeniedCloseButtonText is empty");
         content.setDeniedCloseButtonText(deniedCloseButtonText);
         return this;
@@ -169,7 +176,7 @@ public class AndroidPermission {
      * @return Method chaining, AndroidPermission.
      */
     public AndroidPermission setShowSettingButtonText(String showSettingButtonText) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(showSettingButtonText),
+        Preconditions.checkArgument(!isNullOrEmpty(showSettingButtonText),
                 "The text for ShowSettingButtonText is empty");
         content.setSettingButtonText(showSettingButtonText);
         return this;
@@ -189,23 +196,37 @@ public class AndroidPermission {
     }
 
 
-    public Observable<ArrayList<String>> requestPermission(String... permissions) {
+    /**
+     * get String resource from String.xml
+     *
+     * @param resId            String resource ID
+     * @param exceptionMessage error Message
+     * @return String from String.xml
+     */
+    private String getString(int resId, String exceptionMessage) {
+        String stringRes = context.getString(resId);
+        Preconditions.checkArgument(!isNullOrEmpty(stringRes), exceptionMessage);
+        return stringRes;
+    }
+
+
+    public Observable<List<String>> requestPermission(String... permissions) {
         return requestPermission(Lists.newArrayList(permissions));
     }
 
 
-    public Observable<ArrayList<String>> requestPermission(List<String> permissions) {
-        return Observable.create((ObservableOnSubscribe<ArrayList<String>>) subscriber -> {
+    public Observable<List<String>> requestPermission(List<String> permissions) {
+        return Observable.create((ObservableOnSubscribe<List<String>>) subscriber -> {
             if (isEmpty(permissions)) {
                 subscriber.onError(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
             } else {
-                boolean isGrantedAll = true;
+                boolean isAllGranted = true;
                 for (String permission : permissions) {
                     if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                        isGrantedAll = false;
+                        isAllGranted = false;
                     }
                 }
-                if (isGrantedAll) {
+                if (isAllGranted) {
                     subscriber.onComplete();
                 } else {
                     listener = new PermissionListener() {
@@ -214,16 +235,31 @@ public class AndroidPermission {
                         }
 
 
-                        @Override public void permissionDenied(ArrayList<String> deniedPermissions) {
+                        @Override
+                        public void permissionDenied(List<String> deniedPermissions) {
                             subscriber.onNext(deniedPermissions);
                         }
                     };
-                    content.setPermissions(removeDuplicatedPermission(permissions));
-                    content.setPackageName(context.getPackageName());
-                    startPermissionActivity();
+                    startPermissionActivity(permissions);
                 }
             }
-        }).doOnDispose(this::terminateLeakyObjects).doOnTerminate(this::terminateLeakyObjects);
+        }).doOnDispose(this::terminateLeakyObjects);
+    }
+
+
+    /**
+     * Show Permission Activity
+     *
+     * @param permissions post with Content to PermissionActivity
+     */
+    private void startPermissionActivity(List<String> permissions) {
+        content.setPermissions(removeDuplicatedPermission(permissions));
+        content.setPackageName(context.getPackageName());
+
+        Intent intent = new Intent(context, PermissionActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(KEY_PERMISSION_CONTENT, content);
+        context.startActivity(intent);
     }
 
 
@@ -231,7 +267,6 @@ public class AndroidPermission {
      * terminate static Listener and context
      */
     private void terminateLeakyObjects() {
-        Log.e("AndroidPermission", "terminateLeakyObjects");
         listener = null;
         context = null;
     }
@@ -258,30 +293,5 @@ public class AndroidPermission {
         if (listener != null) {
             listener.permissionDenied(deniedPermissions);
         }
-    }
-
-
-    /**
-     * Show Permission Activity with Bundle -> createBundle()
-     */
-    private void startPermissionActivity() {
-        Intent intent = new Intent(context, PermissionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY_PERMISSION_CONTENT, content);
-        context.startActivity(intent);
-    }
-
-
-    /**
-     * get String resource from String.xml
-     *
-     * @param resId            String resource ID
-     * @param exceptionMessage error Message
-     * @return String from String.xml
-     */
-    private String getString(int resId, String exceptionMessage) {
-        String stringRes = context.getString(resId);
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(stringRes), exceptionMessage);
-        return stringRes;
     }
 }
