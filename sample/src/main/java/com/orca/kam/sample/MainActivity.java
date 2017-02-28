@@ -31,8 +31,8 @@ import static android.Manifest.permission.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AndroidPermission androidPermission;
     private CompositeDisposable disposables = new CompositeDisposable();
+    private AndroidPermission androidPermission;
 
     private ViewModel viewModel = new ViewModel();
     private ActivityMainBinding binding;

@@ -18,7 +18,7 @@ public class ViewModel extends BaseObservable {
 
 
     void updateConsoleLog(String log) {
-        Log.e("updateConsoleLog",log);
+        Log.e("AndroidPermission",log);
         this.consoleTextObservableField.set(consoleTextObservableField.get() + log + NEW_LINE);
     }
 }
