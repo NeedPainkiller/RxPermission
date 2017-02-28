@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -34,7 +35,7 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicateStrin
  */
 public class AndroidPermission {
 
-    private final Context context;
+    private Context context;
     private final PermissionContent content;
     private static PermissionListener listener;
 
@@ -45,6 +46,8 @@ public class AndroidPermission {
      * @param context(Activity or Application) Get String Resource, Package name, start Permission Activity and check Permissions
      */
     public AndroidPermission(Context context) {
+
+        Log.e("AndroidPermission", "init");
         Preconditions.checkArgument(!Strings.isNullOrEmpty(context.getPackageName()), "Context is Invalid");
         this.context = context;
         content = new PermissionContent();
@@ -220,17 +223,17 @@ public class AndroidPermission {
                     startPermissionActivity();
                 }
             }
-        }).doOnTerminate(this::removeListener);
+        }).doOnDispose(this::terminateLeakyObjects).doOnTerminate(this::terminateLeakyObjects);
     }
 
 
     /**
-     * unsubscribe static Listener
+     * terminate static Listener and context
      */
-    private void removeListener() {
-        if (listener != null) {
-            listener = null;
-        }
+    private void terminateLeakyObjects() {
+        Log.e("AndroidPermission", "terminateLeakyObjects");
+        listener = null;
+        context = null;
     }
 
 
