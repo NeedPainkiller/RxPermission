@@ -24,18 +24,6 @@ class PermissionContent implements Parcelable {
 
     static final String KEY_PERMISSION_CONTENT = "KEY_PERMISSION_CONTENT";
 
-    private static String DEF_EXP_MESSAGE
-            = "we need permission for read contact and find your location";
-    private static String DEF_EXP_CONFIRM_BTN
-            = "Confirm";
-    private static String DEF_DENY_MESSAGE
-            = "If you reject permission,you can not use this service\n" +
-            "Please turn on permissions at [Setting] > [Permission]";
-    private static String DEF_DENY_CLOSE_BTN
-            = "Close";
-    private static String DEF_SETTING_BTN
-            = "Go to Setting";
-
 
     PermissionContent() {
     }
@@ -106,32 +94,33 @@ class PermissionContent implements Parcelable {
 
 
     String getExplanationMessage() {
-        return !isNullOrEmpty(explanationMessage) ?
-                explanationMessage : DEF_EXP_MESSAGE;
+        return !isNullOrEmpty(explanationMessage) ? explanationMessage :
+                "we need permission for read contact and find your location";
     }
 
 
     String getExplanationConfirmButtonText() {
         return !isNullOrEmpty(explanationConfirmButtonText) ?
-                explanationConfirmButtonText : DEF_EXP_CONFIRM_BTN;
+                explanationConfirmButtonText : "Confirm";
     }
 
 
     String getDeniedMessage() {
-        return !isNullOrEmpty(deniedMessage) ?
-                deniedMessage : DEF_DENY_MESSAGE;
+        return !isNullOrEmpty(deniedMessage) ? deniedMessage :
+                "If you reject permission,you can not use this service\n" +
+                        "Please turn on permissions at [Setting] > [Permission]";
     }
 
 
     String getDeniedCloseButtonText() {
         return !isNullOrEmpty(deniedCloseButtonText) ?
-                deniedCloseButtonText : DEF_DENY_CLOSE_BTN;
+                deniedCloseButtonText : "Close";
     }
 
 
     String getSettingButtonText() {
         return !isNullOrEmpty(settingButtonText) ?
-                settingButtonText : DEF_SETTING_BTN;
+                settingButtonText : "Go to Setting";
     }
 
 
