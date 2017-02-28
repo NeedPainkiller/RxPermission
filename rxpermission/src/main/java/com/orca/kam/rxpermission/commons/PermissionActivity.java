@@ -127,7 +127,8 @@ public class PermissionActivity extends AppCompatActivity {
 
 
     private void requestPermissions(ArrayList<String> needPermissions) {
-        ActivityCompat.requestPermissions(this, needPermissions.toArray(new String[needPermissions.size()]),
+        ActivityCompat.requestPermissions(this,
+                needPermissions.toArray(new String[needPermissions.size()]),
                 REQ_CODE_PERMISSION_REQUEST);
     }
 
