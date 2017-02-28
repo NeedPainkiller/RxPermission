@@ -20,7 +20,7 @@ import io.reactivex.ObservableOnSubscribe;
 
 import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION_CONTENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
-import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicateStringInList;
+import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPermission;
 
 /**
  * Project RxPermission
@@ -218,7 +218,7 @@ public class AndroidPermission {
                             subscriber.onNext(deniedPermissions);
                         }
                     };
-                    content.setPermissions(removeDuplicateStringInList(permissions));
+                    content.setPermissions(removeDuplicatedPermission(permissions));
                     content.setPackageName(context.getPackageName());
                     startPermissionActivity();
                 }

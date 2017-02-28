@@ -17,7 +17,7 @@ import static android.Manifest.permission.*;
  * @create 2017-02-21 - 오후 1:20
  */
 public class PermissionUtil {
-    private static List<String> dangerousPermissions = Lists.newArrayList(
+    private static List<String> PERMISSIONS_DANGER = Lists.newArrayList(
             READ_CALENDAR, WRITE_CALENDAR,
             CAMERA,
             READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS,
@@ -38,8 +38,8 @@ public class PermissionUtil {
      * @return is Dangerous Permission
      */
     public static boolean isDangerousPermission(String permission) {
-        for (String dangerousPermission : dangerousPermissions) {
-            if (dangerousPermission.equals(permission)) {
+        for (String dangerous : PERMISSIONS_DANGER) {
+            if (dangerous.equals(permission)) {
                 return true;
             }
         }
@@ -71,7 +71,7 @@ public class PermissionUtil {
      * @param strings need to filtering List
      * @return List what removed Duplicate item
      */
-    public static List<String> removeDuplicateStringInList(List<String> strings) {
+    public static List<String> removeDuplicatedPermission(List<String> strings) {
         return ImmutableSet.copyOf(strings).asList();
     }
 
