@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         setDataBinding();
         setToolbar();
         setConsole();
-        viewModel.updateConsoleLog("onCreate");
         initAndroidPermission(this);
     }
 
@@ -72,12 +71,6 @@ public class MainActivity extends AppCompatActivity {
         if (androidPermission == null) {
             androidPermission = new AndroidPermission(context);
         }
-    }
-
-
-    @Override protected void onResume() {
-        super.onResume();
-        viewModel.updateConsoleLog("onResume");
     }
 
 
