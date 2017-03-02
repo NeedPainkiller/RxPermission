@@ -10,7 +10,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.listener.PermissionListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -289,7 +288,7 @@ public class AndroidPermission {
      *
      * @param deniedPermissions The Denied Permissions from PermissionActivity
      */
-    static void permissionDenied(ArrayList<String> deniedPermissions) {
+    static void permissionDenied(List<String> deniedPermissions) {
         if (listener != null) {
             listener.permissionDenied(deniedPermissions);
         }
