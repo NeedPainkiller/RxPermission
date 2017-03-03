@@ -10,7 +10,6 @@ import java.util.Set;
 
 import static android.Manifest.permission.*;
 
-
 /**
  * Project RxPermission
  *
