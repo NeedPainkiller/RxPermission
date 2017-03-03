@@ -9,7 +9,7 @@
 
 ```java
 dependencies {
-    compile 'com.github.kam6512:RxPermission:0.25'
+    compile 'com.github.kam6512:RxPermission:1.0'
 }
 ```
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         disposables.clear();
     }
 
-     private void requestBluetoothPermission() {
+    private void requestBluetoothPermission() {
         Disposable disposable = androidPermission.requestPermission(
         CAMERA,ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, // Dangerous Permissions
         INTERNET // Not Dangerous Permission
