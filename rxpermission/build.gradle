@@ -41,30 +41,28 @@ apt {
 
 dependencies {
     def ext = rootProject.ext;
-    Map<String, String> TestDependencies = ext.TestDependencies;
-    Map<String, String> GoogleDependencies = ext.GoogleDependencies;
-    Map<String, String> RxDependencies = ext.RxDependencies;
-    Map<String, String> UiDependencies = ext.UiDependencies;
+    Map<String, String> Test = ext.TestDependencies;
+    Map<String, String> Injection = ext.InjectionDependencies;
+    Map<String, String> Google = ext.GoogleDependencies;
+    Map<String, String> Rx = ext.RxDependencies;
+    Map<String, String> Ui = ext.UiDependencies;
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile TestDependencies.JUnit
+    testCompile Test.JUnit
 
-    compile GoogleDependencies.Google_SupportV4
-    compile GoogleDependencies.Google_AppCompatV7
+    compile Injection.Dart
+    provided Injection.Dart_Provide
+    compile Injection.Henson
+    provided Injection.Henson_Provide
 
-    compile GoogleDependencies.Guava
+    compile Google.Google_SupportV4
+    compile Google.Google_AppCompatV7
+    compile Google.Guava
 
-    compile RxDependencies.RxJava2
-    compile RxDependencies.RxAndroid2
+    compile Rx.RxJava2
+    compile Rx.RxAndroid2
 
-    compile UiDependencies.MaterialDialogs
-
-    compile 'com.f2prateek.dart:dart:2.0.2'
-    provided 'com.f2prateek.dart:dart-processor:2.0.2'
-
-    compile 'com.f2prateek.dart:henson:2.0.2'
-    provided 'com.f2prateek.dart:henson-processor:2.0.2'
-
+    compile Ui.MaterialDialogs
 }
 
 buildscript {

@@ -23,14 +23,14 @@ ext {
     V_STETHO = "1.4.2"
     V_LeakCanary = "1.5"
     ToolsDependencies = [
-            Hugo        : "com.jakewharton.hugo:hugo-plugin:$V_HUGO",
-            Retrolambda : "me.tatarka:gradle-retrolambda:$V_RETROLAMBDA",
-            Stetho      : "com.facebook.stetho:stetho:$V_STETHO",
-            StethoOkHttp: "com.facebook.stetho:stetho-okhttp3:$V_STETHO",
-            jsr310      : "com.jakewharton.threetenabp:threetenabp:$V_310",
-            LeakCanaryDebug : "com.squareup.leakcanary:leakcanary-android:$V_LeakCanary",
-            LeakCanaryRelease : "com.squareup.leakcanary:leakcanary-android-no-op:1.5:$V_LeakCanary",
-            LeakCanaryTest : "com.squareup.leakcanary:leakcanary-android-no-op:1.5:$V_LeakCanary"
+            Hugo             : "com.jakewharton.hugo:hugo-plugin:$V_HUGO",
+            Retrolambda      : "me.tatarka:gradle-retrolambda:$V_RETROLAMBDA",
+            Stetho           : "com.facebook.stetho:stetho:$V_STETHO",
+            StethoOkHttp     : "com.facebook.stetho:stetho-okhttp3:$V_STETHO",
+            jsr310           : "com.jakewharton.threetenabp:threetenabp:$V_310",
+            LeakCanaryDebug  : "com.squareup.leakcanary:leakcanary-android:$V_LeakCanary",
+            LeakCanaryRelease: "com.squareup.leakcanary:leakcanary-android-no-op:1.5:$V_LeakCanary",
+            LeakCanaryTest   : "com.squareup.leakcanary:leakcanary-android-no-op:1.5:$V_LeakCanary"
 
     ]
 
@@ -49,13 +49,18 @@ ext {
     V_DAGGER = "2.5"
     V_BUTTER_KNIFE = "8.4.0"
     V_ANDROID_ANNOTATAIONS = "4.0.0"
+    V_DART_HENSON = "2.0.2"
     InjectionDependencies = [
             dagger                : "com.google.dagger:dagger:$V_DAGGER",
             daggerCompilerApt     : "com.google.dagger:dagger-compiler:$V_DAGGER",
             ButterKnife           : "com.jakewharton:butterknife:$V_BUTTER_KNIFE",
             ButterKnifeCompilerApt: "com.jakewharton:butterknife-compiler:$V_BUTTER_KNIFE",
             AndroidAnnotations    : "org.androidannotations:androidannotations-api:$V_ANDROID_ANNOTATAIONS",
-            AndroidAnnotationsApt : "org.androidannotations:androidannotations:$V_ANDROID_ANNOTATAIONS"
+            AndroidAnnotationsApt : "org.androidannotations:androidannotations:$V_ANDROID_ANNOTATAIONS",
+            Dart                  : "com.f2prateek.dart:dart:$V_DART_HENSON",
+            Dart_Provide          : "com.f2prateek.dart:dart-processor:$V_DART_HENSON",
+            Henson                : "com.f2prateek.dart:henson:$V_DART_HENSON",
+            Henson_Provide        : "com.f2prateek.dart:henson-processor:$V_DART_HENSON",
     ]
 
     V_RxJava1 = "1.2.4"
@@ -85,14 +90,14 @@ ext {
             retrofit             : "com.squareup.retrofit2:retrofit:$V_RETROFIT",
             retrofitConverterGson: "com.squareup.retrofit2:converter-gson:$V_RETROFIT",
             retrofitAdapterRxJava: "com.squareup.retrofit2:adapter-rxjava:$V_RETROFIT",
-            okhttp3Logging       : 'com.squareup.okhttp3:logging-interceptor:3.2.0'
+            okhttp3Logging       : "com.squareup.okhttp3:logging-interceptor:3.2.0"
     ]
     DbDependencies = [
             RealmJava: "io.realm:realm-gradle-plugin:$V_REALM"
     ]
 
     UiDependencies = [
-            MaterialDialogs: 'com.afollestad.material-dialogs:commons:0.9.3.0',
+            MaterialDialogs: "com.afollestad.material-dialogs:commons:0.9.3.0",
             picasso        : "com.squareup.picasso:picasso:2.5.2"
     ]
 
