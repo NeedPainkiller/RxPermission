@@ -17,7 +17,7 @@ import static android.Manifest.permission.*;
  * @create 2017-02-21 - 오후 1:20
  */
 public class PermissionUtil {
-    private static List<String> PERMISSIONS_DANGER = Lists.newArrayList(
+    private static final List<String> PERMISSIONS_DANGER = Lists.newArrayList(
             READ_CALENDAR, WRITE_CALENDAR,
             CAMERA,
             READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS,

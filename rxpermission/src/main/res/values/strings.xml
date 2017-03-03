@@ -10,7 +10,7 @@
 
     <string name="permission_exception_none_permissions">You must setPermissions() on AndroidPermission</string>
 
-    <string name="permission_exception_message_explanation_text">Invalid text for ExplanationMessage</string>dsdsds
+    <string name="permission_exception_message_explanation_text">Invalid text for ExplanationMessage</string>
     <string name="permission_exception_message_explanation_value">Invalid value for ExplanationMessage</string>
 
     <string name="permission_exception_button_confirm_text">Invalid text for explanationConfirmButtonText</string>

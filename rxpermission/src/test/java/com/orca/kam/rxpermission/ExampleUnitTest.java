@@ -37,7 +37,7 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
  */
 public class ExampleUnitTest {
-    private List<String> examplePermissions = Lists.newArrayList(
+    private final List<String> examplePermissions = Lists.newArrayList(
             ACCESS_COARSE_LOCATION,
             ACCESS_FINE_LOCATION,
             BODY_SENSORS,
@@ -61,7 +61,7 @@ public class ExampleUnitTest {
             WRITE_CALL_LOG,
             WRITE_CONTACTS,
             WRITE_EXTERNAL_STORAGE);
-    private List<String> exampleDuplicatePermissions = Lists.newArrayList(
+    private final List<String> exampleDuplicatePermissions = Lists.newArrayList(
             READ_CALENDAR, WRITE_CALENDAR,
             CAMERA,
             READ_CONTACTS, WRITE_CONTACTS, GET_ACCOUNTS,
@@ -96,7 +96,7 @@ public class ExampleUnitTest {
 
 
     @Test
-    public void filter() throws Exception {
+    public void filter() {
 
         System.out.println("TEST 1) : examplePermissions");
         showLog(examplePermissions);
