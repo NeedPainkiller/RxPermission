@@ -8,16 +8,15 @@ import android.support.v4.content.ContextCompat;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
+import com.orca.kam.rxpermission.Henson;
 import com.orca.kam.rxpermission.listener.PermissionListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION_CONTENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
 import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPermission;
 
@@ -256,9 +255,9 @@ public class AndroidPermission {
         content.setPermissions(removeDuplicatedPermission(permissions));
         content.setPackageName(context.getPackageName());
 
-        Intent intent = new Intent(context, PermissionActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(KEY_PERMISSION_CONTENT, content);
+        Intent intent = Henson.with(context)
+                .gotoPermissionActivity()
+                .content(content).build();
         context.startActivity(intent);
     }
 
@@ -289,7 +288,7 @@ public class AndroidPermission {
      *
      * @param deniedPermissions The Denied Permissions from PermissionActivity
      */
-    static void permissionDenied(ArrayList<String> deniedPermissions) {
+    static void permissionDenied(List<String> deniedPermissions) {
         if (listener != null) {
             listener.permissionDenied(deniedPermissions);
         }

@@ -10,8 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.common.base.Preconditions;
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
 import static android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
-import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION_CONTENT;
 
 /**
  * Project RxPermission
@@ -32,17 +34,18 @@ import static com.orca.kam.rxpermission.commons.PermissionContent.KEY_PERMISSION
 
 public class PermissionActivity extends AppCompatActivity {
 
+
     private static final int REQ_CODE_PERMISSION_REQUEST = 10;
     private static final int REQ_CODE_REQUEST_SETTING = 20;
 
-    private PermissionContent content;
+    @InjectExtra PermissionContent content;
 
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Dart.inject(this);
         setWindowUntouchable();
-        initPermissionContent();
-        checkPermissions(false);
+        checkPermissions();
     }
 
 
@@ -52,71 +55,26 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
 
-    private void initPermissionContent() {
-        Bundle bundle = getIntent().getExtras();
-        Preconditions.checkArgument(!bundle.isEmpty(), "Invalid Bundle(Extras)");
-        content = bundle.getParcelable(KEY_PERMISSION_CONTENT);
-        Preconditions.checkArgument(content != null, "Invalid PermissionContent");
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_CODE_REQUEST_SETTING) checkPermissions(true);
-        super.onActivityResult(requestCode, resultCode, data);
+    private void checkPermissions() {
+        List<String> deniedPermission = getDeniedPermissionList(content.getPermissions());
+        if (deniedPermission.isEmpty()) {
+            permissionGranted();
+        } else {
+            showRationaleDialog(deniedPermission);
+        }
     }
 
 
     @Override public void onRequestPermissionsResult(
-            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        ArrayList<String> deniedPermissions = new ArrayList<>();
-
-        for (int i = 0; i < permissions.length; i++) {
-            if (grantResults[i] == PERMISSION_DENIED) {
-                deniedPermissions.add(permissions[i]);
+            int requestCode, @NonNull String[] permissionResults, @NonNull int[] grantResults) {
+        if (requestCode == REQ_CODE_PERMISSION_REQUEST) {
+            List<String> deniedPermissions = getDeniedPermissionList(permissionResults, grantResults);
+            if (deniedPermissions.isEmpty()) {
+                permissionGranted();
+            } else {
+                showPermissionDenyDialog(deniedPermissions);
             }
         }
-
-        if (deniedPermissions.isEmpty()) {
-            permissionGranted();
-        } else {
-            showPermissionDenyDialog(deniedPermissions);
-        }
-    }
-
-
-    private void checkPermissions(boolean fromOnActivityResult) {
-        ArrayList<String> needPermissions = new ArrayList<>();
-        boolean showRationale = false;
-        List<String> permissions = content.getPermissions();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PERMISSION_GRANTED) {
-                needPermissions.add(permission);
-                showRationale = true;
-            }
-        }
-
-        if (needPermissions.isEmpty()) {
-            permissionGranted();
-        } else if (fromOnActivityResult) {
-            permissionDenied(needPermissions);
-        } else if (showRationale) {
-            showRationaleDialog(needPermissions);
-        } else {
-            requestPermissions(needPermissions);
-        }
-    }
-
-
-    private void permissionGranted() {
-        AndroidPermission.permissionGranted();
-        finish();
-    }
-
-
-    private void permissionDenied(ArrayList<String> deniedPermissions) {
-        AndroidPermission.permissionDenied(deniedPermissions);
-        finish();
     }
 
 
@@ -126,14 +84,14 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
 
-    private void requestPermissions(ArrayList<String> needPermissions) {
+    private void requestPermissions(List<String> needPermissions) {
         ActivityCompat.requestPermissions(this,
                 needPermissions.toArray(new String[needPermissions.size()]),
                 REQ_CODE_PERMISSION_REQUEST);
     }
 
 
-    private void showRationaleDialog(final ArrayList<String> needPermissions) {
+    private void showRationaleDialog(final List<String> needPermissions) {
         new MaterialDialog.Builder(this)
                 .content(content.getExplanationMessage())
                 .negativeText(content.getExplanationConfirmButtonText())
@@ -143,29 +101,60 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
 
-    private void showPermissionDenyDialog(final ArrayList<String> deniedPermissions) {
+    private void showPermissionDenyDialog(final List<String> deniedPermissions) {
         new MaterialDialog.Builder(this)
                 .content(content.getDeniedMessage())
                 .positiveText(content.getSettingButtonText())
                 .negativeText(content.getDeniedCloseButtonText())
-                .onPositive(showAppSettings())
+                .onPositive((dialog, which) -> showAppSettings())
                 .onNegative((dialog, which) -> permissionDenied(deniedPermissions))
                 .cancelable(false)
                 .show();
     }
 
 
-    private MaterialDialog.SingleButtonCallback showAppSettings() {
-        return (dialog, which) -> {
-            Intent intent = new Intent();
-            String packageName = content.getPackageName();
-            if (!Strings.isNullOrEmpty(packageName)) {
-                intent.setAction(ACTION_APPLICATION_DETAILS_SETTINGS)
-                        .setData(Uri.parse("package:" + content.getPackageName()));
-            } else {
-                intent.setAction(ACTION_MANAGE_APPLICATIONS_SETTINGS);
+    private void showAppSettings() {
+        Intent intent = new Intent();
+        String packageName = content.getPackageName();
+        if (!Strings.isNullOrEmpty(packageName)) {
+            intent.setAction(ACTION_APPLICATION_DETAILS_SETTINGS)
+                    .setData(Uri.parse("package:" + content.getPackageName()));
+        } else {
+            intent.setAction(ACTION_MANAGE_APPLICATIONS_SETTINGS);
+        }
+        startActivityForResult(intent, REQ_CODE_REQUEST_SETTING);
+    }
+
+
+    private List<String> getDeniedPermissionList(String[] permissions, int[] grantResults) {
+        List<String> deniedPermissions = new ArrayList<>();
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults[i] == PERMISSION_DENIED) {
+                deniedPermissions.add(permissions[i]);
             }
-            startActivityForResult(intent, REQ_CODE_REQUEST_SETTING);
-        };
+        }
+        return deniedPermissions;
+    }
+
+
+    private List<String> getDeniedPermissionList(List<String> permissions) {
+        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isGrantedPermission(permission)));
+    }
+
+
+    private boolean isGrantedPermission(String permission) {
+        return ContextCompat.checkSelfPermission(this, permission) == PERMISSION_GRANTED;
+    }
+
+
+    private void permissionGranted() {
+        AndroidPermission.permissionGranted();
+        finish();
+    }
+
+
+    private void permissionDenied(List<String> deniedPermissions) {
+        AndroidPermission.permissionDenied(deniedPermissions);
+        finish();
     }
 }

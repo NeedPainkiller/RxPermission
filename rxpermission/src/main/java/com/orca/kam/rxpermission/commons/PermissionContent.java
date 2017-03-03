@@ -22,9 +22,6 @@ class PermissionContent implements Parcelable {
     private String deniedCloseButtonText;
     private String settingButtonText;
 
-    static final String KEY_PERMISSION_CONTENT = "KEY_PERMISSION_CONTENT";
-
-
     PermissionContent() {
     }
 
