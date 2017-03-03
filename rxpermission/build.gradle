@@ -26,11 +26,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    return void
 }
 
 repositories {
     maven { url "https://jitpack.io" }
     mavenCentral()
+}
+apt {
+    arguments {
+        "dart.henson.package" "com.orca.kam.rxpermission"
+    }
 }
 
 dependencies {
@@ -52,6 +58,13 @@ dependencies {
     compile RxDependencies.RxAndroid2
 
     compile UiDependencies.MaterialDialogs
+
+    compile 'com.f2prateek.dart:dart:2.0.2'
+    provided 'com.f2prateek.dart:dart-processor:2.0.2'
+
+    compile 'com.f2prateek.dart:henson:2.0.2'
+    provided 'com.f2prateek.dart:henson-processor:2.0.2'
+
 }
 
 buildscript {
