@@ -256,8 +256,7 @@ public class AndroidPermission {
         content.setPackageName(context.getPackageName());
 
         Intent intent = Henson.with(context)
-                .gotoPermissionActivity()
-                .content(content).build();
+                .gotoPermissionActivity().content(content).build();
         context.startActivity(intent);
     }
 

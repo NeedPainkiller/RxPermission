@@ -1,11 +1,13 @@
-<manifest package="com.orca.kam.rxpermission"
+<manifest package="com.orca.kam.rxpermissionkt"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application android:allowBackup="true"
-                 android:label="@string/app_name"
-                 android:supportsRtl="true">
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
         <activity
             android:name=".commons.PermissionActivity"
             android:theme="@style/AppTheme"/>
     </application>
+
 </manifest>

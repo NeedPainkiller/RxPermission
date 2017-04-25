@@ -1,5 +1,6 @@
 package com.orca.kam.rxpermission.util;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -63,7 +64,11 @@ public class PermissionUtil {
      * Filtering Dangerous Permission in list
      */
     public static List<String> filteringDangerousPermission(List<String> permissions) {
-        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isDangerousPermission(permission)));
+        return Lists.newArrayList(Iterables.filter(permissions, new Predicate<String>() {
+            @Override public boolean apply(String permission) {
+                return !isDangerousPermission(permission);
+            }
+        }));
     }
 
 

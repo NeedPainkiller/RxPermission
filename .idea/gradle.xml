@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/rxpermission" />
+            <option value="$PROJECT_DIR$/rxpermissionkt" />
             <option value="$PROJECT_DIR$/sample" />
           </set>
         </option>

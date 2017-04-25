@@ -2,10 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.hugo'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
 
     compileOptions {
         encoding = 'UTF-8'
@@ -21,6 +24,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -68,9 +72,12 @@ dependencies {
     compile Rx.RxAndroid2
 
     compile Ui.MaterialDialogs
-}
 
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
 buildscript {
+    ext.kotlin_version = '1.0.6'
+
     repositories {
         mavenCentral()
         jcenter()
@@ -82,5 +89,6 @@ buildscript {
         classpath ClassPaths.Hugo
         classpath ClassPaths.Retrolambda
         classpath ClassPaths.APT
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
