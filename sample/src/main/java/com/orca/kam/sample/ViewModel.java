@@ -10,14 +10,14 @@ import android.util.Log;
  * @author Kang Young Won
  * @create 2016-10-10 - 오후 1:11
  */
-public class ViewModel extends BaseObservable {
+public class ViewModel extends BaseObservable implements IMain{
 
     private static final String NEW_LINE = "\n -> ";
 
     public ObservableField<String> consoleTextObservableField = new ObservableField<>("READY" + NEW_LINE);
 
 
-    void updateConsoleLog(String log) {
+    public void updateConsoleLog(String log) {
         Log.e("AndroidPermission",log);
         this.consoleTextObservableField.set(consoleTextObservableField.get() + log + NEW_LINE);
     }
