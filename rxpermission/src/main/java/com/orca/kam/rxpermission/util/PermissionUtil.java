@@ -1,6 +1,5 @@
 package com.orca.kam.rxpermission.util;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -9,7 +8,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static android.Manifest.permission.*;
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.Manifest.permission.ADD_VOICEMAIL;
+import static android.Manifest.permission.BODY_SENSORS;
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.GET_ACCOUNTS;
+import static android.Manifest.permission.PROCESS_OUTGOING_CALLS;
+import static android.Manifest.permission.READ_CALENDAR;
+import static android.Manifest.permission.READ_CALL_LOG;
+import static android.Manifest.permission.READ_CONTACTS;
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+import static android.Manifest.permission.RECEIVE_MMS;
+import static android.Manifest.permission.RECEIVE_SMS;
+import static android.Manifest.permission.RECEIVE_WAP_PUSH;
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.SEND_SMS;
+import static android.Manifest.permission.USE_SIP;
+import static android.Manifest.permission.WRITE_CALENDAR;
+import static android.Manifest.permission.WRITE_CALL_LOG;
+import static android.Manifest.permission.WRITE_CONTACTS;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 /**
  * Project RxPermission
@@ -18,6 +40,13 @@ import static android.Manifest.permission.*;
  * @create 2017-02-21 - 오후 1:20
  */
 public class PermissionUtil {
+    public static final String TAG = "RxPermission";
+    public static final String TAG_ACTIVITY = "RxPermissionActivity";
+    public static final String TAG_FRAGMENT = "RxPermissionFragment";
+
+    public static final int REQ_CODE_PERMISSION_REQUEST = 10;
+    public static final int REQ_CODE_REQUEST_SETTING = 20;
+
     private static final List<String> PERMISSIONS_DANGER = Lists.newArrayList(
             READ_CALENDAR, WRITE_CALENDAR,
             CAMERA,
@@ -64,11 +93,7 @@ public class PermissionUtil {
      * Filtering Dangerous Permission in list
      */
     public static List<String> filteringDangerousPermission(List<String> permissions) {
-        return Lists.newArrayList(Iterables.filter(permissions, new Predicate<String>() {
-            @Override public boolean apply(String permission) {
-                return !isDangerousPermission(permission);
-            }
-        }));
+        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isDangerousPermission(permission)));
     }
 
 
