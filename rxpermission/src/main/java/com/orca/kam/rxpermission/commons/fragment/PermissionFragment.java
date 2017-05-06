@@ -1,20 +1,24 @@
-package com.orca.kam.rxpermission.commons;
+package com.orca.kam.rxpermission.commons.fragment;
 
+import android.annotation.TargetApi;
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.f2prateek.dart.Dart;
-import com.f2prateek.dart.InjectExtra;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.orca.kam.rxpermission.commons.PermissionContent;
+import com.orca.kam.rxpermission.commons.activity.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,38 +28,51 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
 import static android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS;
 import static android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE;
+import static com.orca.kam.rxpermission.util.PermissionUtil.REQ_CODE_PERMISSION_REQUEST;
+import static com.orca.kam.rxpermission.util.PermissionUtil.REQ_CODE_REQUEST_SETTING;
+import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
 
 /**
- * Project RxPermission
- *
- * @author Kang Young Won
- * @create 2016-08-29 - 오후 12:43
+ * @author kam6512
+ * @Create on 2017-05-05.
  */
+public class PermissionFragment extends Fragment {
 
-public class PermissionActivity extends AppCompatActivity {
-
-
-    private static final int REQ_CODE_PERMISSION_REQUEST = 10;
-    private static final int REQ_CODE_REQUEST_SETTING = 20;
-
-    @InjectExtra PermissionContent content;
+    private Context context;
+    private PermissionListener listener;
+    private PermissionContent content;
 
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Dart.inject(this);
-        setWindowUntouchable();
-        checkPermissions();
+    public void setListener(PermissionListener listener) {
+        if (listener != null) {
+            this.listener = listener;
+        }
     }
 
 
-    private void setWindowUntouchable() {
-        Window window = getWindow();
+    public void setContent(PermissionContent content) {
+        if (content != null) {
+            this.content = content;
+        }
+    }
+
+
+    @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+        setWindowUntouchable();
+        checkPermissions();
+        Log.e(TAG, "IS FRAGMENT!!!!!!!!");
+    }
+
+
+    void setWindowUntouchable() {
+        Window window = getActivity().getWindow();
         if (window != null) window.addFlags(FLAG_NOT_TOUCHABLE);
     }
 
 
-    private void checkPermissions() {
+    void checkPermissions() {
         List<String> deniedPermission = getDeniedPermissionList(content.getPermissions());
         if (deniedPermission.isEmpty()) {
             permissionGranted();
@@ -65,34 +82,35 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
 
+    private void finish() {
+        getActivity().getFragmentManager().beginTransaction().remove(this).commit();
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override public void onRequestPermissionsResult(
             int requestCode, @NonNull String[] permissionResults, @NonNull int[] grantResults) {
-        if (requestCode == REQ_CODE_PERMISSION_REQUEST) {
-            List<String> deniedPermissions = getDeniedPermissionList(permissionResults, grantResults);
-            if (deniedPermissions.isEmpty()) {
-                permissionGranted();
-            } else {
-                showPermissionDenyDialog(deniedPermissions);
-            }
+        super.onRequestPermissionsResult(requestCode, permissionResults, grantResults);
+        if (requestCode != REQ_CODE_PERMISSION_REQUEST) return;
+
+        List<String> deniedPermissions = getDeniedPermissionList(permissionResults, grantResults);
+        if (deniedPermissions.isEmpty()) {
+            permissionGranted();
+        } else {
+            showPermissionDenyDialog(deniedPermissions);
         }
     }
 
 
-    @Override public void finish() {
-        super.finish();
-        overridePendingTransition(0, 0);
-    }
-
-
-    private void requestPermissions(List<String> needPermissions) {
-        ActivityCompat.requestPermissions(this,
-                needPermissions.toArray(new String[needPermissions.size()]),
+    @TargetApi(Build.VERSION_CODES.M)
+    private void requestPermissions(@NonNull List<String> needPermissions) {
+        requestPermissions(needPermissions.toArray(new String[needPermissions.size()]),
                 REQ_CODE_PERMISSION_REQUEST);
     }
 
 
     private void showRationaleDialog(final List<String> needPermissions) {
-        new MaterialDialog.Builder(this)
+        new MaterialDialog.Builder(context)
                 .content(content.getExplanationMessage())
                 .negativeText(content.getExplanationConfirmButtonText())
                 .onNegative((dialog, which) -> requestPermissions(needPermissions))
@@ -102,7 +120,7 @@ public class PermissionActivity extends AppCompatActivity {
 
 
     private void showPermissionDenyDialog(final List<String> deniedPermissions) {
-        new MaterialDialog.Builder(this)
+        new MaterialDialog.Builder(context)
                 .content(content.getDeniedMessage())
                 .positiveText(content.getSettingButtonText())
                 .negativeText(content.getDeniedCloseButtonText())
@@ -143,18 +161,18 @@ public class PermissionActivity extends AppCompatActivity {
 
 
     private boolean isGrantedPermission(String permission) {
-        return ContextCompat.checkSelfPermission(this, permission) == PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(context, permission) == PERMISSION_GRANTED;
     }
 
 
-    private void permissionGranted() {
-        AndroidPermission.permissionGranted();
+    void permissionGranted() {
+        listener.permissionGranted();
         finish();
     }
 
 
-    private void permissionDenied(List<String> deniedPermissions) {
-        AndroidPermission.permissionDenied(deniedPermissions);
+    void permissionDenied(List<String> deniedPermissions) {
+        listener.permissionDenied(deniedPermissions);
         finish();
     }
 }

@@ -1,4 +1,4 @@
-package com.orca.kam.rxpermission.listener;
+package com.orca.kam.rxpermission.commons.activity;
 
 import java.util.List;
 
