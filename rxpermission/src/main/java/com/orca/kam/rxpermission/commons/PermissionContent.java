@@ -13,7 +13,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  * @author Kang Young Won
  * @create 2017-02-16 - 오후 4:08
  */
-class PermissionContent implements Parcelable {
+public class PermissionContent implements Parcelable {
     private List<String> permissions;
     private String packageName;
     private String explanationMessage;
@@ -21,6 +21,7 @@ class PermissionContent implements Parcelable {
     private String deniedMessage;
     private String deniedCloseButtonText;
     private String settingButtonText;
+
 
     PermissionContent() {
     }
@@ -45,37 +46,37 @@ class PermissionContent implements Parcelable {
     }
 
 
-    void setPermissions(List<String> permissions) {
+    public void setPermissions(List<String> permissions) {
         this.permissions = permissions;
     }
 
 
-    void setPackageName(String packageName) {
+    public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
 
-    void setExplanationMessage(String explanationMessage) {
+    public void setExplanationMessage(String explanationMessage) {
         this.explanationMessage = explanationMessage;
     }
 
 
-    void setExplanationConfirmButtonText(String explanationConfirmButtonText) {
+    public void setExplanationConfirmButtonText(String explanationConfirmButtonText) {
         this.explanationConfirmButtonText = explanationConfirmButtonText;
     }
 
 
-    void setDeniedMessage(String deniedMessage) {
+    public void setDeniedMessage(String deniedMessage) {
         this.deniedMessage = deniedMessage;
     }
 
 
-    void setDeniedCloseButtonText(String deniedCloseButtonText) {
+    public void setDeniedCloseButtonText(String deniedCloseButtonText) {
         this.deniedCloseButtonText = deniedCloseButtonText;
     }
 
 
-    void setSettingButtonText(String settingButtonText) {
+    public void setSettingButtonText(String settingButtonText) {
         this.settingButtonText = settingButtonText;
     }
 
@@ -85,37 +86,37 @@ class PermissionContent implements Parcelable {
     }
 
 
-    String getPackageName() {
+    public String getPackageName() {
         return packageName;
     }
 
 
-    String getExplanationMessage() {
+    public String getExplanationMessage() {
         return !isNullOrEmpty(explanationMessage) ? explanationMessage :
                 "we need permission for read contact and find your location";
     }
 
 
-    String getExplanationConfirmButtonText() {
+    public String getExplanationConfirmButtonText() {
         return !isNullOrEmpty(explanationConfirmButtonText) ?
                 explanationConfirmButtonText : "Confirm";
     }
 
 
-    String getDeniedMessage() {
+    public String getDeniedMessage() {
         return !isNullOrEmpty(deniedMessage) ? deniedMessage :
                 "If you reject permission,you can not use this service\n" +
                         "Please turn on permissions at [Setting] > [Permission]";
     }
 
 
-    String getDeniedCloseButtonText() {
+    public String getDeniedCloseButtonText() {
         return !isNullOrEmpty(deniedCloseButtonText) ?
                 deniedCloseButtonText : "Close";
     }
 
 
-    String getSettingButtonText() {
+    public String getSettingButtonText() {
         return !isNullOrEmpty(settingButtonText) ?
                 settingButtonText : "Go to Setting";
     }

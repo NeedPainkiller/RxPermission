@@ -1,22 +1,30 @@
 package com.orca.kam.rxpermission.commons;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.Henson;
-import com.orca.kam.rxpermission.listener.PermissionListener;
+import com.orca.kam.rxpermission.commons.activity.PermissionListener;
+import com.orca.kam.rxpermission.commons.fragment.PermissionFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
+import static com.orca.kam.rxpermission.util.PermissionUtil.TAG_FRAGMENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
 import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPermission;
 
@@ -33,9 +41,13 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.removeDuplicatedPerm
  */
 public class AndroidPermission {
 
+
+    private static boolean isAvailableInflate = false;
     private static PermissionListener listener;
     private Context context;
     private final PermissionContent content = new PermissionContent();
+
+    private final List<String> permissions = new ArrayList<>();
 
 
     /**
@@ -45,6 +57,8 @@ public class AndroidPermission {
      */
     public AndroidPermission(Context context) {
         Preconditions.checkArgument(!isNullContext(context), "Context is Invalid");
+        isAvailableInflate = context instanceof Activity;
+        Log.e(TAG, "isAvailableInflate : " + isAvailableInflate);
         this.context = context;
     }
 
@@ -209,64 +223,113 @@ public class AndroidPermission {
     }
 
 
-    public Observable<List<String>> requestPermission(String... permissions) {
-        return requestPermission(Lists.newArrayList(permissions));
+    public AndroidPermission request(String permission) {
+        this.permissions.add(permission);
+        return this;
     }
 
 
-    public Observable<List<String>> requestPermission(List<String> permissions) {
-        return Observable.create((ObservableOnSubscribe<List<String>>) subscriber -> {
-            if (isEmpty(permissions)) {
-                subscriber.onError(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
-            } else {
-                boolean isAllGranted = true;
-                for (String permission : permissions) {
-                    if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                        isAllGranted = false;
-                    }
-                }
-                if (isAllGranted) {
-                    subscriber.onComplete();
-                } else {
-                    listener = new PermissionListener() {
-                        @Override public void permissionGranted() {
+    public AndroidPermission request(String... permissions) {
+        return request(Lists.newArrayList(permissions));
+    }
+
+
+    public AndroidPermission request(List<String> permissions) {
+        this.permissions.addAll(permissions);
+        return this;
+    }
+
+
+    public Observable<List<String>> requestPermission() {
+        Observable<List<String>> observable =
+                Observable.create((ObservableOnSubscribe<List<String>>) subscriber -> {
+                    if (isEmpty(permissions)) {
+                        subscriber.onError(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
+                    } else {
+                        if (isAllPermissionGranted()) {
                             subscriber.onComplete();
-                        }
+                        } else {
+                            listener = new PermissionListener() {
+                                @Override public void permissionGranted() {
+                                    subscriber.onComplete();
+                                }
 
 
-                        @Override
-                        public void permissionDenied(List<String> deniedPermissions) {
-                            subscriber.onNext(deniedPermissions);
+                                @Override
+                                public void permissionDenied(List<String> deniedPermissions) {
+                                    subscriber.onNext(deniedPermissions);
+                                }
+                            };
+                            content.setPermissions(removeDuplicatedPermission(permissions));
+                            content.setPackageName(context.getPackageName());
+                            if (isAvailableInflate) {
+                                startPermissionFragment((Activity) context);
+                            } else {
+                                startPermissionActivity();
+                            }
                         }
-                    };
-                    startPermissionActivity(permissions);
-                }
+                    }
+                }).doOnDispose(this::terminateLeakyObjects);
+//        observable.mergeWith(activity());
+        return observable;
+    }
+
+
+    @DebugLog private boolean isAllPermissionGranted() {
+        boolean isAllGranted = true;
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                isAllGranted = false;
             }
-        }).doOnDispose(this::terminateLeakyObjects);
+        }
+        return isAllGranted;
     }
 
 
     /**
      * Show Permission Activity
-     *
-     * @param permissions post with Content to PermissionActivity
      */
-    private void startPermissionActivity(List<String> permissions) {
-        content.setPermissions(removeDuplicatedPermission(permissions));
-        content.setPackageName(context.getPackageName());
-
+    @DebugLog private void startPermissionActivity() {
         Intent intent = Henson.with(context)
                 .gotoPermissionActivity().content(content).build();
         context.startActivity(intent);
     }
 
 
+    @DebugLog private void startPermissionFragment(Activity activity) {
+        PermissionFragment permissionFragment = findPermissionFragment(activity);
+        if (permissionFragment == null) {
+            permissionFragment = new PermissionFragment();
+        }
+        permissionFragment.setListener(listener);
+        permissionFragment.setContent(content);
+        FragmentManager fragmentManager = getFragmentManager(activity);
+        fragmentManager
+                .beginTransaction()
+                .add(permissionFragment, TAG_FRAGMENT)
+                .commitAllowingStateLoss();
+        fragmentManager.executePendingTransactions();
+    }
+
+
+    @DebugLog
+    private PermissionFragment findPermissionFragment(Activity activity) {
+        return (PermissionFragment) activity.getFragmentManager().findFragmentByTag(TAG_FRAGMENT);
+    }
+
+
+    @DebugLog private FragmentManager getFragmentManager(Activity activity) {
+        return activity.getFragmentManager();
+    }
+
+
     /**
      * terminate static Listener and context
      */
-    private void terminateLeakyObjects() {
+    @DebugLog private void terminateLeakyObjects() {
         listener = null;
         context = null;
+        permissions.clear();
     }
 
 
@@ -274,7 +337,7 @@ public class AndroidPermission {
      * Call From Permission Activity...
      * When All Permissions Granted
      */
-    static void permissionGranted() {
+    public static void permissionGranted() {
         if (listener != null) {
             listener.permissionGranted();
         }
@@ -287,7 +350,7 @@ public class AndroidPermission {
      *
      * @param deniedPermissions The Denied Permissions from PermissionActivity
      */
-    static void permissionDenied(List<String> deniedPermissions) {
+    public static void permissionDenied(List<String> deniedPermissions) {
         if (listener != null) {
             listener.permissionDenied(deniedPermissions);
         }
