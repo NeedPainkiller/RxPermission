@@ -6,7 +6,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
         <activity
-            android:name=".commons.PermissionActivity"
+            android:name="com.orca.kam.rxpermission.kotlin.PermissionActivity"
             android:theme="@style/AppTheme"/>
     </application>
 

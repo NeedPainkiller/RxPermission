@@ -1,1 +1,1 @@
-include ':rxpermission', ':sample', ':rxpermissionkt'
+include ':rxpermission', ':sample'
