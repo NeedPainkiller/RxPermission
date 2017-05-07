@@ -1,4 +1,4 @@
-package com.orca.kam.rxpermission.commons.activity;
+package com.orca.kam.rxpermission.legacy.activity;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * @author Kang Young Won
  * @create 2016-08-29 - 오전 11:17
  */
-public interface PermissionListener {
+public interface PermissionListener_Legacy {
 
     /**
      * Call From Permission Activity...
@@ -20,7 +20,7 @@ public interface PermissionListener {
      * Call From Permission Activity....
      * When Permissions Denied
      *
-     * @param deniedPermissions The Denied Permissions from PermissionActivity
+     * @param deniedPermissions The Denied Permissions from PermissionActivity_Legacy
      */
     void permissionDenied(List<String> deniedPermissions);
 }
