@@ -3,6 +3,9 @@ package com.orca.kam.rxpermission.commons;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.orca.kam.rxpermission.util.PermissionUtil;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
@@ -14,7 +17,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
  * @create 2017-02-16 - 오후 4:08
  */
 public class PermissionContent implements Parcelable {
-    private List<String> permissions;
+    private List<String> permissionList = new ArrayList<>();
     private String packageName;
     private String explanationMessage;
     private String explanationConfirmButtonText;
@@ -32,11 +35,11 @@ public class PermissionContent implements Parcelable {
     }
 
 
-    PermissionContent(List<String> permissions, String packageName,
+    PermissionContent(List<String> permissionList, String packageName,
                       String explanationMessage, String explanationConfirmButtonText,
                       String deniedMessage, String deniedCloseButtonText,
                       String settingButtonText) {
-        this.permissions = permissions;
+        this.permissionList = permissionList;
         this.packageName = packageName;
         this.explanationMessage = explanationMessage;
         this.explanationConfirmButtonText = explanationConfirmButtonText;
@@ -46,8 +49,31 @@ public class PermissionContent implements Parcelable {
     }
 
 
-    public void setPermissions(List<String> permissions) {
-        this.permissions = permissions;
+    public void setPermissionList(List<String> permissionList) {
+        this.permissionList = permissionList;
+        deduplicatePermissionList();
+    }
+
+
+    public void addPermission(String permission) {
+        permissionList.add(permission);
+        deduplicatePermissionList();
+    }
+
+
+    public void addAllPermission(List<String> permissions) {
+        permissionList.addAll(permissions);
+        deduplicatePermissionList();
+    }
+
+
+    public void clearPermissionList() {
+        permissionList.clear();
+    }
+
+
+    private void deduplicatePermissionList() {
+        permissionList = PermissionUtil.deduplicatePermission(permissionList);
     }
 
 
@@ -81,8 +107,8 @@ public class PermissionContent implements Parcelable {
     }
 
 
-    public List<String> getPermissions() {
-        return permissions;
+    public List<String> getPermissionList() {
+        return permissionList;
     }
 
 
@@ -106,7 +132,7 @@ public class PermissionContent implements Parcelable {
     public String getDeniedMessage() {
         return !isNullOrEmpty(deniedMessage) ? deniedMessage :
                 "If you reject permission,you can not use this service\n" +
-                        "Please turn on permissions at [Setting] > [Permission]";
+                        "Please turn on permissionList at [Setting] > [Permission]";
     }
 
 
@@ -128,7 +154,7 @@ public class PermissionContent implements Parcelable {
 
 
     @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringList(permissions);
+        dest.writeStringList(permissionList);
         dest.writeString(packageName);
         dest.writeString(explanationMessage);
         dest.writeString(explanationConfirmButtonText);
@@ -139,7 +165,7 @@ public class PermissionContent implements Parcelable {
 
 
     private void readFromParcel(Parcel source) {
-        this.permissions = source.createStringArrayList();
+        this.permissionList = source.createStringArrayList();
         this.packageName = source.readString();
         this.explanationMessage = source.readString();
         this.explanationConfirmButtonText = source.readString();

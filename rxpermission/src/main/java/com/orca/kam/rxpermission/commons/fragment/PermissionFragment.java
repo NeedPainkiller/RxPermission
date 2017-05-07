@@ -11,17 +11,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.Pair;
 import android.view.Window;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.orca.kam.rxpermission.commons.PermissionContent;
-import com.orca.kam.rxpermission.commons.activity.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import io.reactivex.subjects.PublishSubject;
 
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -39,20 +44,22 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
 public class PermissionFragment extends Fragment {
 
     private Context context;
-    private PermissionListener listener;
     private PermissionContent content;
-
-
-    public void setListener(PermissionListener listener) {
-        if (listener != null) {
-            this.listener = listener;
-        }
-    }
+    private Map<String, PublishSubject<Pair<String, Boolean>>> permissionSubjects
+            = Maps.newHashMap();
 
 
     public void setContent(PermissionContent content) {
-        if (content != null) {
-            this.content = content;
+        Preconditions.checkArgument(content != null, "PermissionContent_Legacy is Invalid");
+        this.content = content;
+        setPermissionSubjects();
+    }
+
+
+    private void setPermissionSubjects() {
+        List<String> permissionList = content.getPermissionList();
+        for (String permission : permissionList) {
+            permissionSubjects.put(permission, PublishSubject.create());
         }
     }
 
@@ -73,7 +80,7 @@ public class PermissionFragment extends Fragment {
 
 
     void checkPermissions() {
-        List<String> deniedPermission = getDeniedPermissionList(content.getPermissions());
+        List<String> deniedPermission = getDeniedPermissionList(content.getPermissionList());
         if (deniedPermission.isEmpty()) {
             permissionGranted();
         } else {
@@ -166,13 +173,13 @@ public class PermissionFragment extends Fragment {
 
 
     void permissionGranted() {
-        listener.permissionGranted();
+//        listener.permissionGranted();
         finish();
     }
 
 
     void permissionDenied(List<String> deniedPermissions) {
-        listener.permissionDenied(deniedPermissions);
+//        listener.permissionDenied(deniedPermissions);
         finish();
     }
 }

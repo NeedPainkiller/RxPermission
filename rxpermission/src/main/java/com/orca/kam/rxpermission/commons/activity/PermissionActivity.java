@@ -19,7 +19,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.R;
-import com.orca.kam.rxpermission.commons.AndroidPermission;
 import com.orca.kam.rxpermission.commons.PermissionContent;
 
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class PermissionActivity extends AppCompatActivity {
 
 
     private void checkPermissions() {
-        List<String> deniedPermission = getDeniedPermissionList(content.getPermissions());
+        List<String> deniedPermission = getDeniedPermissionList(content.getPermissionList());
         if (deniedPermission.isEmpty()) {
             permissionGranted();
         } else {
@@ -159,13 +158,13 @@ public class PermissionActivity extends AppCompatActivity {
 
 
     private void permissionGranted() {
-        AndroidPermission.permissionGranted();
+//        AndroidPermission_Legacy.permissionGranted();
         finish();
     }
 
 
     private void permissionDenied(List<String> deniedPermissions) {
-        AndroidPermission.permissionDenied(deniedPermissions);
+//        AndroidPermission_Legacy.permissionDenied(deniedPermissions);
         finish();
     }
 }
