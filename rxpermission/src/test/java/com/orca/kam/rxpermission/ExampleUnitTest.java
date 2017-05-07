@@ -106,10 +106,10 @@ public class ExampleUnitTest {
         System.out.println("TEST 3) : filteringNormalPermission");
         List<String> dangerousPermissions = PermissionUtil.filteringNormalPermission(examplePermissions);
         showLog(dangerousPermissions);
-        System.out.println("TEST 4) : removeDuplicatedPermission");
+        System.out.println("TEST 4) : deduplication");
         showLog(exampleDuplicatePermissions);
-        System.out.println("TEST 5) : removeDuplicatedPermission");
-        List<String> removedDuplicateItemPermissions = PermissionUtil.removeDuplicatedPermission(exampleDuplicatePermissions);
+        System.out.println("TEST 5) : deduplication");
+        List<String> removedDuplicateItemPermissions = PermissionUtil.deduplication(exampleDuplicatePermissions);
         showLog(removedDuplicateItemPermissions);
     }
 

@@ -101,7 +101,7 @@ public class PermissionUtil {
      * @param strings need to filtering List
      * @return List what removed Duplicate item
      */
-    public static List<String> removeDuplicatedPermission(List<String> strings) {
+    public static List<String> deduplicatePermission(List<String> strings) {
         return ImmutableSet.copyOf(strings).asList();
     }
 
