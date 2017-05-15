@@ -20,7 +20,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.orca.kam.rxpermission.commons.PermissionContent;
+import com.orca.kam.rxpermission.commons.permission.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +44,12 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
 public class PermissionFragment extends Fragment {
 
     private Context context;
-    private PermissionContent content;
+    private Permission content;
     private Map<String, PublishSubject<Pair<String, Boolean>>> permissionSubjects
             = Maps.newHashMap();
 
 
-    public void setContent(PermissionContent content) {
+    public void setContent(Permission content) {
         Preconditions.checkArgument(content != null, "PermissionContent_Legacy is Invalid");
         this.content = content;
         setPermissionSubjects();

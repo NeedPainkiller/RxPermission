@@ -12,34 +12,48 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.Henson;
 import com.orca.kam.rxpermission.commons.activity.PermissionActivity;
+import com.orca.kam.rxpermission.commons.dialog.DialogMessage;
 import com.orca.kam.rxpermission.commons.fragment.PermissionFragment;
+import com.orca.kam.rxpermission.commons.permission.Permission;
+import com.orca.kam.rxpermission.commons.permission.PermissionPair;
+import com.orca.kam.rxpermission.util.PermissionUtil;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.subjects.PublishSubject;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.orca.kam.rxpermission.util.PermissionUtil.*;
 import static com.orca.kam.rxpermission.util.PermissionUtil.TAG_FRAGMENT;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
 
 public class AndroidPermission {
 
-
     private Context context;
-    private final PermissionContent content = new PermissionContent();
+
+    private final DialogMessage dialogMessage;
+//    private final Permission permission;
+
+    private List<String> permissionList = new ArrayList<>();
 
     private PermissionFragment permissionFragment;
     private static WeakReference<PermissionActivity> permissionActivityRef;
-
-    private static boolean isAvailableInflate = false;
+//    private Map<String, PublishSubject<PermissionPair>> permissionSubject = new HashMap<>();
+    private static boolean isAvailableInflate;
 
 
     public AndroidPermission(Context context) {
         Preconditions.checkArgument(!isNullContext(context), "Context is Invalid");
         isAvailableInflate = context instanceof Activity;
         this.context = context;
+        this.dialogMessage = new DialogMessage();
+//        this.permission = new Permission();
     }
 
 
@@ -51,13 +65,13 @@ public class AndroidPermission {
     public AndroidPermission setExplanationMessage(String message) {
         Preconditions.checkArgument(!isNullOrEmpty(message),
                 "The text for ExplanationMessage is empty");
-        content.setExplanationMessage(message);
+        dialogMessage.setExplanationMessage(message);
         return this;
     }
 
 
     public AndroidPermission setExplanationMessage(@StringRes int messageId) {
-        content.setExplanationMessage(getString(messageId,
+        dialogMessage.setExplanationMessage(getString(messageId,
                 "Invalid ID value for ExplanationMessage"));
         return this;
     }
@@ -66,13 +80,13 @@ public class AndroidPermission {
     public AndroidPermission setExplanationConfirmButtonText(String buttonText) {
         Preconditions.checkArgument(!isNullOrEmpty(buttonText),
                 "The text for explanationConfirmText is empty");
-        content.setExplanationConfirmButtonText(buttonText);
+        dialogMessage.setExplanationConfirmButtonText(buttonText);
         return this;
     }
 
 
     public AndroidPermission setExplanationConfirmButtonText(@StringRes int buttonTextId) {
-        content.setExplanationConfirmButtonText(getString(buttonTextId,
+        dialogMessage.setExplanationConfirmButtonText(getString(buttonTextId,
                 "Invalid ID value for explanationConfirmText"));
         return this;
     }
@@ -81,13 +95,13 @@ public class AndroidPermission {
     public AndroidPermission setDeniedMessage(String deniedMessage) {
         Preconditions.checkArgument(!isNullOrEmpty(deniedMessage),
                 "The text for DeniedMessage is empty");
-        content.setDeniedMessage(deniedMessage);
+        dialogMessage.setDeniedMessage(deniedMessage);
         return this;
     }
 
 
     public AndroidPermission setDeniedMessage(@StringRes int deniedMessageResID) {
-        content.setDeniedMessage(getString(deniedMessageResID,
+        dialogMessage.setDeniedMessage(getString(deniedMessageResID,
                 "Invalid ID value for DeniedMessage"));
         return this;
     }
@@ -96,13 +110,13 @@ public class AndroidPermission {
     public AndroidPermission setDeniedCloseButtonText(String deniedCloseButtonText) {
         Preconditions.checkArgument(!isNullOrEmpty(deniedCloseButtonText),
                 "The text for DeniedCloseButtonText is empty");
-        content.setDeniedCloseButtonText(deniedCloseButtonText);
+        dialogMessage.setDeniedCloseButtonText(deniedCloseButtonText);
         return this;
     }
 
 
     public AndroidPermission setDeniedCloseButtonText(@StringRes int deniedCloseButtonTextResID) {
-        content.setDeniedCloseButtonText(getString(deniedCloseButtonTextResID,
+        dialogMessage.setDeniedCloseButtonText(getString(deniedCloseButtonTextResID,
                 "Invalid ID value for DeniedCloseButtonText"));
         return this;
     }
@@ -111,13 +125,13 @@ public class AndroidPermission {
     public AndroidPermission setShowSettingButtonText(String showSettingButtonText) {
         Preconditions.checkArgument(!isNullOrEmpty(showSettingButtonText),
                 "The text for ShowSettingButtonText is empty");
-        content.setSettingButtonText(showSettingButtonText);
+        dialogMessage.setSettingButtonText(showSettingButtonText);
         return this;
     }
 
 
     public AndroidPermission setShowSettingButtonText(@StringRes int showSettingButtonTextResID) {
-        content.setSettingButtonText(getString(showSettingButtonTextResID,
+        dialogMessage.setSettingButtonText(getString(showSettingButtonTextResID,
                 "Invalid ID value for ShowSettingButtonText"));
         return this;
     }
@@ -131,7 +145,8 @@ public class AndroidPermission {
 
 
     public AndroidPermission request(String permission) {
-        content.addPermission(permission);
+//        content.addPermission(permission);
+        permissionList.add(permission);
         return this;
     }
 
@@ -142,34 +157,30 @@ public class AndroidPermission {
 
 
     public AndroidPermission request(List<String> permissions) {
-        content.addAllPermission(permissions);
+        permissionList.addAll(permissions);
         return this;
     }
 
 
     public Observable<List<String>> requestPermission() {
-        List<String> permissions = content.getPermissionList();
-        Observable<List<String>> observable =
-                Observable.create((ObservableOnSubscribe<List<String>>) subscriber -> {
-                    if (isEmpty(permissions)) {
-                        subscriber.onError(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
-                    } else {
-                        if (isAllPermissionGranted(permissions)) {
-                            subscriber.onComplete();
-                        } else {
+        if (isEmpty(permissionList)) {
+            return Observable.error(new IllegalArgumentException("You must add one or more Permissions unconditionally"));
+        }
+        if (isAllPermissionGranted(permissionList)) {
+            return Observable.empty();
+        }
+        return Observable.create((ObservableOnSubscribe<List<String>>) subscriber -> {
+            Permission permission = new Permission(deduplicatePermission(permissionList),
+                    context.getPackageName());
 
 
-                            content.setPackageName(context.getPackageName());
-                            if (isAvailableInflate) {
-                                startPermissionFragment((Activity) context);
-                            } else {
-                                startPermissionActivity();
-                            }
-                        }
-                    }
-                }).doOnDispose(this::terminateLeakyObjects);
-//        observable.mergeWith(activity());
-        return observable;
+            if (isAvailableInflate) {
+
+                startPermissionFragment((Activity) context);
+            } else {
+                startPermissionActivity();
+            }
+        }).doOnDispose(this::terminateLeakyObjects);
     }
 
 
@@ -185,7 +196,7 @@ public class AndroidPermission {
 
 
     private void terminateLeakyObjects() {
-        context = null;
+//        context = null;
         permissionFragment = null;
         permissionActivityRef.clear();
         content.clearPermissionList();

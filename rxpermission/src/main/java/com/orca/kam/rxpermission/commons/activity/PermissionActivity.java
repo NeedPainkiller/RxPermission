@@ -19,7 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.orca.kam.rxpermission.R;
-import com.orca.kam.rxpermission.commons.PermissionContent;
+import com.orca.kam.rxpermission.commons.permission.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
 public class PermissionActivity extends AppCompatActivity {
 
 
-    @InjectExtra PermissionContent content;
+    @InjectExtra Permission content;
 
 
     @Override protected void onCreate(Bundle savedInstanceState) {
