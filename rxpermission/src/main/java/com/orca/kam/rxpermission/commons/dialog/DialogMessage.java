@@ -1,24 +1,17 @@
-package com.orca.kam.rxpermission.commons;
+package com.orca.kam.rxpermission.commons.dialog;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.orca.kam.rxpermission.util.PermissionUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 /**
- * Project RxPermission
+ * @author kam6512
+ * @Create on 2017-05-15.
  *
- * @author Kang Young Won
- * @create 2017-02-16 - 오후 4:08
+ * @// TODO: 2017-05-16  Creater 클래스를 만들어도 될꺼같은데...
  */
-public class PermissionContent implements Parcelable {
-    private List<String> permissionList = new ArrayList<>();
-    private String packageName;
+public class DialogMessage implements Parcelable {
     private String explanationMessage;
     private String explanationConfirmButtonText;
     private String deniedMessage;
@@ -26,59 +19,23 @@ public class PermissionContent implements Parcelable {
     private String settingButtonText;
 
 
-    PermissionContent() {
+    public DialogMessage() {
     }
 
 
-    private PermissionContent(Parcel source) {
+    private DialogMessage(Parcel source) {
         readFromParcel(source);
     }
 
 
-    PermissionContent(List<String> permissionList, String packageName,
-                      String explanationMessage, String explanationConfirmButtonText,
-                      String deniedMessage, String deniedCloseButtonText,
-                      String settingButtonText) {
-        this.permissionList = permissionList;
-        this.packageName = packageName;
+    DialogMessage(String explanationMessage, String explanationConfirmButtonText,
+                  String deniedMessage, String deniedCloseButtonText,
+                  String settingButtonText) {
         this.explanationMessage = explanationMessage;
         this.explanationConfirmButtonText = explanationConfirmButtonText;
         this.deniedMessage = deniedMessage;
         this.deniedCloseButtonText = deniedCloseButtonText;
         this.settingButtonText = settingButtonText;
-    }
-
-
-    public void setPermissionList(List<String> permissionList) {
-        this.permissionList = permissionList;
-        deduplicatePermissionList();
-    }
-
-
-    public void addPermission(String permission) {
-        permissionList.add(permission);
-        deduplicatePermissionList();
-    }
-
-
-    public void addAllPermission(List<String> permissions) {
-        permissionList.addAll(permissions);
-        deduplicatePermissionList();
-    }
-
-
-    public void clearPermissionList() {
-        permissionList.clear();
-    }
-
-
-    private void deduplicatePermissionList() {
-        permissionList = PermissionUtil.deduplicatePermission(permissionList);
-    }
-
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
     }
 
 
@@ -104,16 +61,6 @@ public class PermissionContent implements Parcelable {
 
     public void setSettingButtonText(String settingButtonText) {
         this.settingButtonText = settingButtonText;
-    }
-
-
-    public List<String> getPermissionList() {
-        return permissionList;
-    }
-
-
-    public String getPackageName() {
-        return packageName;
     }
 
 
@@ -154,8 +101,6 @@ public class PermissionContent implements Parcelable {
 
 
     @Override public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringList(permissionList);
-        dest.writeString(packageName);
         dest.writeString(explanationMessage);
         dest.writeString(explanationConfirmButtonText);
         dest.writeString(deniedMessage);
@@ -165,8 +110,6 @@ public class PermissionContent implements Parcelable {
 
 
     private void readFromParcel(Parcel source) {
-        this.permissionList = source.createStringArrayList();
-        this.packageName = source.readString();
         this.explanationMessage = source.readString();
         this.explanationConfirmButtonText = source.readString();
         this.deniedMessage = source.readString();
@@ -175,15 +118,15 @@ public class PermissionContent implements Parcelable {
     }
 
 
-    public static final Parcelable.Creator<PermissionContent> CREATOR
-            = new Creator<PermissionContent>() {
-        @Override public PermissionContent createFromParcel(Parcel source) {
-            return new PermissionContent(source);
+    public static final Parcelable.Creator<DialogMessage> CREATOR
+            = new Parcelable.Creator<DialogMessage>() {
+        @Override public DialogMessage createFromParcel(Parcel source) {
+            return new DialogMessage(source);
         }
 
 
-        @Override public PermissionContent[] newArray(int size) {
-            return new PermissionContent[size];
+        @Override public DialogMessage[] newArray(int size) {
+            return new DialogMessage[size];
         }
     };
 }
