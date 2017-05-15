@@ -109,7 +109,7 @@ public class ExampleUnitTest {
         System.out.println("TEST 4) : deduplication");
         showLog(exampleDuplicatePermissions);
         System.out.println("TEST 5) : deduplication");
-        List<String> removedDuplicateItemPermissions = PermissionUtil.deduplication(exampleDuplicatePermissions);
+        List<String> removedDuplicateItemPermissions = PermissionUtil.deduplicatePermission(exampleDuplicatePermissions);
         showLog(removedDuplicateItemPermissions);
     }
 
