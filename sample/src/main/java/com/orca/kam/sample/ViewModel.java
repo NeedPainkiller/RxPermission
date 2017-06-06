@@ -16,9 +16,8 @@ public class ViewModel extends BaseObservable implements IMain{
 
     public ObservableField<String> consoleTextObservableField = new ObservableField<>("READY" + NEW_LINE);
 
-
     public void updateConsoleLog(String log) {
-        Log.e("AndroidPermission_Legacy",log);
+        Log.e("AndroidPermission",log);
         this.consoleTextObservableField.set(consoleTextObservableField.get() + log + NEW_LINE);
     }
 }

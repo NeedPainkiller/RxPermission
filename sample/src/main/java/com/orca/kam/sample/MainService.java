@@ -6,7 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.orca.kam.rxpermission.commons.AndroidPermission;
+import com.orca.kam.rxpermission.PermissionX;
 
 import hugo.weaving.DebugLog;
 import io.reactivex.disposables.CompositeDisposable;
@@ -62,7 +62,6 @@ public class MainService extends Service {
 
     @DebugLog public void setiMain(IMain iMain) {
         this.iMain = iMain;
-        requestBluetoothPermission();
     }
 
 
@@ -73,9 +72,9 @@ public class MainService extends Service {
     }
 
 
-    @DebugLog private void requestBluetoothPermission() {
-        AndroidPermission androidPermission = new AndroidPermission(this);
-        Disposable disposable = androidPermission
+    @DebugLog public void requestBluetoothPermission() {
+        PermissionX permissionX = new PermissionX(this);
+        Disposable disposable = permissionX
                 .request(READ_CALENDAR)
                 .request(WRITE_CALENDAR)
                 .request(CAMERA)
@@ -102,13 +101,9 @@ public class MainService extends Service {
                 .request(WRITE_EXTERNAL_STORAGE)
                 .request(INTERNET)
                 .requestPermission()
-                .subscribe(deniedPermissions -> {
-                            for (String deniedPermission : deniedPermissions) {
-                                iMain.updateConsoleLog("onNext : Permission Denial : " + deniedPermission);
-                            }
-                        },
+                .subscribe(permissionPair -> iMain.updateConsoleLog(permissionPair.permissionName +" IS " + permissionPair.isGranted),
                         throwable -> iMain.updateConsoleLog("errorOccurred : Request Error : " + throwable.getMessage()),
-                        () -> iMain.updateConsoleLog("onComplete : Permissions All Granted"));
+                        () -> iMain.updateConsoleLog("onComplete : Permissions Already All Granted"));
         disposables.add(disposable);
     }
 }

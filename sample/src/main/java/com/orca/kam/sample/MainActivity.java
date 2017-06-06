@@ -13,12 +13,11 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.orca.kam.rxpermission.commons.AndroidPermission;
+import com.orca.kam.rxpermission.PermissionX;
 import com.orca.kam.sample.databinding.ActivityMainBinding;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -49,7 +48,6 @@ import static android.Manifest.permission.WRITE_CALENDAR;
 import static android.Manifest.permission.WRITE_CALL_LOG;
 import static android.Manifest.permission.WRITE_CONTACTS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static com.orca.kam.rxpermission.util.PermissionUtil.TAG_ACTIVITY;
 
 /**
  * Project RxPermission
@@ -90,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements IMain {
 
     private void setConsole() {
         TextView console = binding.console;
-        console.setMaxLines(25);
+//        console.setMaxLines(25);
         console.setVerticalScrollBarEnabled(true);
         console.setMovementMethod(new ScrollingMovementMethod());
     }
@@ -100,17 +98,16 @@ public class MainActivity extends AppCompatActivity implements IMain {
         super.onDestroy();
         disposables.clear();
 
-        if (mainService != null){
+        if (mainService != null) {
             mainService.setiMain(null); // unregister
             unbindService(serviceConnection);
         }
-
     }
 
 
     private void requestBluetoothPermission() {
-        AndroidPermission androidPermission = new AndroidPermission(this);
-        Disposable disposable = androidPermission
+        PermissionX permissionX = new PermissionX(this);
+        Disposable disposable = permissionX
                 .request(READ_CALENDAR)
                 .request(WRITE_CALENDAR)
                 .request(CAMERA)
@@ -138,13 +135,11 @@ public class MainActivity extends AppCompatActivity implements IMain {
                 .request(INTERNET)
                 .requestPermission()
                 .doOnSubscribe(disposable1 -> updateConsoleLog("Request Bluetooth Permission"))
-                .subscribe(deniedPermissions -> {
-                            for (String deniedPermission : deniedPermissions) {
-                                updateConsoleLog("onNext : Permission Denial : " + deniedPermission);
-                            }
-                        },
+//                .filter(permissionPair -> !permissionPair.isGranted)
+//                .filter(permissionPair -> permissionPair.isGranted)
+                .subscribe(permissionPair -> updateConsoleLog(permissionPair.permissionName +" IS " + permissionPair.isGranted),
                         throwable -> updateConsoleLog("errorOccurred : Request Error : " + throwable.getMessage()),
-                        () -> updateConsoleLog("onComplete : Permissions All Granted"));
+                        () -> updateConsoleLog("onComplete : Permissions Already All Granted"));
         disposables.add(disposable);
     }
 
@@ -162,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements IMain {
         Intent intent;
         if (id == R.id.action_request_activity) {
             requestBluetoothPermission();
-        }else if (id == R.id.action_request_service) {
+        } else if (id == R.id.action_request_service) {
             startService();
         } else if (id == R.id.action_settings) {
             try {
@@ -179,10 +174,13 @@ public class MainActivity extends AppCompatActivity implements IMain {
         return super.onOptionsItemSelected(item);
     }
 
-    private void startService(){
+
+    private void startService() {
         Intent intent = new Intent(this, MainService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
+
+
     private ServiceConnection serviceConnection = new ServiceConnection() {
 
         @Override
@@ -192,7 +190,9 @@ public class MainActivity extends AppCompatActivity implements IMain {
             mainService = binder.getService();
             updateConsoleLog("onServiceConnected");
             mainService.setiMain(MainActivity.this); // register
+            mainService.requestBluetoothPermission();
         }
+
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
@@ -203,6 +203,5 @@ public class MainActivity extends AppCompatActivity implements IMain {
 
     @Override public void updateConsoleLog(String log) {
         viewModel.updateConsoleLog(log);
-        Log.e(TAG_ACTIVITY,log);
     }
 }
