@@ -25,7 +25,7 @@ import io.reactivex.ObservableOnSubscribe;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.orca.kam.rxpermission.util.PermissionUtil.TAG;
 import static com.orca.kam.rxpermission.util.PermissionUtil.TAG_FRAGMENT;
-import static com.orca.kam.rxpermission.util.PermissionUtil.deduplicatePermission;
+import static com.orca.kam.rxpermission.util.PermissionUtil.deduplicateList;
 import static com.orca.kam.rxpermission.util.PermissionUtil.isEmpty;
 
 /**
@@ -260,7 +260,7 @@ public class AndroidPermission_Legacy {
                                     subscriber.onNext(deniedPermissions);
                                 }
                             };
-                            content.setPermissions(deduplicatePermission(permissions));
+                            content.setPermissions(deduplicateList(permissions));
                             content.setPackageName(context.getPackageName());
                             if (isAvailableInflate) {
                                 startPermissionFragment((Activity) context);

@@ -1,4 +1,4 @@
-package com.orca.kam.rxpermission.commons.dialog;
+package com.orca.kam.rxpermission.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,7 +8,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 /**
  * @author kam6512
  * @Create on 2017-05-15.
- *
  * @// TODO: 2017-05-16  Creater 클래스를 만들어도 될꺼같은데...
  */
 public class DialogMessage implements Parcelable {
@@ -28,9 +27,9 @@ public class DialogMessage implements Parcelable {
     }
 
 
-    DialogMessage(String explanationMessage, String explanationConfirmButtonText,
-                  String deniedMessage, String deniedCloseButtonText,
-                  String settingButtonText) {
+    public DialogMessage(String explanationMessage, String explanationConfirmButtonText,
+                         String deniedMessage, String deniedCloseButtonText,
+                         String settingButtonText) {
         this.explanationMessage = explanationMessage;
         this.explanationConfirmButtonText = explanationConfirmButtonText;
         this.deniedMessage = deniedMessage;

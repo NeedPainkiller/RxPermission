@@ -1,4 +1,4 @@
-package com.orca.kam.rxpermission.commons.permission;
+package com.orca.kam.rxpermission.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -48,7 +48,7 @@ public class Permission implements Parcelable {
 
     public void addAllPermission(List<String> permissions) {
         permissionList.addAll(permissions);
-        deduplicatePermissionList();
+//        deduplicatePermissionList();
     }
 
 
@@ -58,7 +58,7 @@ public class Permission implements Parcelable {
 
 
     private void deduplicatePermissionList() {
-        permissionList = PermissionUtil.deduplicatePermission(permissionList);
+        permissionList = PermissionUtil.deduplicateList(permissionList);
     }
 
 

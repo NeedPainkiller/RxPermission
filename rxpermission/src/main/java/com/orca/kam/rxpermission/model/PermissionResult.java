@@ -1,14 +1,14 @@
-package com.orca.kam.rxpermission.commons.permission;
+package com.orca.kam.rxpermission.model;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
-public class PermissionPair {
+public class PermissionResult {
     public final String permissionName;
     public final boolean isGranted;
 
 
-    public PermissionPair(String permissionName, boolean isGranted) {
+    public PermissionResult(String permissionName, boolean isGranted) {
         this.permissionName = permissionName;
         this.isGranted = isGranted;
     }
@@ -17,7 +17,7 @@ public class PermissionPair {
     @Override public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PermissionPair that = (PermissionPair) o;
+        PermissionResult that = (PermissionResult) o;
         return isGranted == that.isGranted &&
                 Objects.equal(permissionName, that.permissionName);
     }
