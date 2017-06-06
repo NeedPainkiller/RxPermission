@@ -21,12 +21,12 @@ dependencies {
 public class MainActivity extends AppCompatActivity {
 
     private CompositeDisposable disposables = new CompositeDisposable();
-    private AndroidPermission androidPermission;
+    private AndroidPermission permissionX;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ...
-        androidPermission = new AndroidPermission(this);
+        permissionX = new AndroidPermission(this);
     }
 
     @Override protected void onDestroy() {
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void requestBluetoothPermission() {
-        Disposable disposable = androidPermission.requestPermission(
+        Disposable disposable = permissionX.requestPermission(
         CAMERA,ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, // Dangerous Permissions
         INTERNET // Not Dangerous Permission
         ).subscribe(deniedPermissions -> { // When Permission (or Permissions) Denied
