@@ -1,9 +1,16 @@
 package com.orca.kam.rxpermission.util;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.content.ContextCompat;
+
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,6 +39,10 @@ import static android.Manifest.permission.WRITE_CALENDAR;
 import static android.Manifest.permission.WRITE_CALL_LOG;
 import static android.Manifest.permission.WRITE_CONTACTS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS;
+import static android.provider.Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS;
 
 /**
  * Project RxPermission
@@ -82,7 +93,7 @@ public class PermissionUtil {
      * @return Dangerous Permissions
      * Filtering Normal Permission in list
      */
-    public static List<String> filteringNormalPermission(List<String> permissions) {
+    public static List<String> removeSafeItem(List<String> permissions) {
         return Lists.newArrayList(Iterables.filter(permissions, PermissionUtil::isDangerousPermission));
     }
 
@@ -92,7 +103,7 @@ public class PermissionUtil {
      * @return Normal Permissions
      * Filtering Dangerous Permission in list
      */
-    public static List<String> filteringDangerousPermission(List<String> permissions) {
+    public static List<String> removeDangerousItem(List<String> permissions) {
         return Lists.newArrayList(Iterables.filter(permissions, permission -> !isDangerousPermission(permission)));
     }
 
@@ -101,8 +112,50 @@ public class PermissionUtil {
      * @param strings need to filtering List
      * @return List what removed Duplicate item
      */
-    public static List<String> deduplicatePermission(List<String> strings) {
+    public static List<String> deduplicateList(List<String> strings) {
         return ImmutableSet.copyOf(strings).asList();
+    }
+
+
+    public static boolean isAllGranted(Context context, List<String> permissions) {
+        boolean isAllGranted = true;
+        for (String permission : permissions) {
+            if (!isGranted(context, permission)) isAllGranted = false;
+        }
+        return isAllGranted;
+    }
+
+
+    public static boolean isGranted(Context context, String permission) {
+        return ContextCompat.checkSelfPermission(context, permission) == PERMISSION_GRANTED;
+    }
+
+
+    public static List<String> getDeniedList(String[] permissions, int[] grantResults) {
+        List<String> deniedPermissions = new ArrayList<>();
+        for (int i = 0; i < permissions.length; i++) {
+            if (grantResults[i] == PERMISSION_DENIED) {
+                deniedPermissions.add(permissions[i]);
+            }
+        }
+        return deniedPermissions;
+    }
+
+
+    public static List<String> getDeniedList(Context context, List<String> permissions) {
+        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isGranted(context, permission)));
+    }
+
+
+    public static Intent getSettingIntent(String packageName) {
+        Intent intent = new Intent();
+        if (Strings.isNullOrEmpty(packageName)) {
+            intent.setAction(ACTION_MANAGE_APPLICATIONS_SETTINGS);
+        } else {
+            intent.setAction(ACTION_APPLICATION_DETAILS_SETTINGS)
+                    .setData(Uri.parse("package:" + packageName));
+        }
+        return intent;
     }
 
 
@@ -130,4 +183,14 @@ public class PermissionUtil {
         }
         return o instanceof Object[] && (((Object[]) o).length == 0);
     }
+
+//    void checkPermissions() {
+//        List<String> deniedPermission = PermissionUtil.getDeniedList(context, permission.getPermissionList());
+//        if (deniedPermission.isEmpty()) {
+//            permissionGranted();
+//        } else {
+//            dialogManager.showRationaleDialog()
+//                    .subscribe(aVoid -> requestPermissions(deniedPermission));
+//        }
+//    }
 }
