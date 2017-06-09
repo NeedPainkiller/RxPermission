@@ -11,19 +11,19 @@ import io.reactivex.Observable;
  * @author kam6512
  * @create on 2017-05-18.
  */
-public class DialogManager {
+class DialogManager {
 
     private MaterialDialog.Builder builder;
     private DialogMessage message;
 
 
-    public DialogManager(Context context, DialogMessage message) {
+    DialogManager(Context context, DialogMessage message) {
         builder = new MaterialDialog.Builder(context);
         this.message = message;
     }
 
 
-    public Observable<Boolean> showRationaleDialog() {
+    Observable<Boolean> showRationaleDialog() {
         return Observable.create(subscriber -> builder.content(message.getExplanationMessage())
                 .negativeText(message.getExplanationConfirmButtonText())
                 .onNegative((dialog, which) -> subscriber.onNext(true))
@@ -32,7 +32,7 @@ public class DialogManager {
     }
 
 
-    public Observable<Boolean> showPermissionDenyDialog() {
+    Observable<Boolean> showPermissionDenyDialog() {
         return Observable.create(subscriber -> builder.content(message.getDeniedMessage())
                 .positiveText(message.getSettingButtonText())
                 .negativeText(message.getDeniedCloseButtonText())
