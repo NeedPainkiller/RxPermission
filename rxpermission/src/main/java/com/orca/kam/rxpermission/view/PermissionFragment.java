@@ -14,11 +14,13 @@ import com.orca.kam.rxpermission.model.PermissionResult;
 import com.orca.kam.rxpermission.util.PermissionUtil;
 
 import java.util.List;
+import java.util.Map;
 
 import hugo.weaving.DebugLog;
 import io.reactivex.Flowable;
+import io.reactivex.subjects.PublishSubject;
 
-import static com.orca.kam.rxpermission.PermissionX.permissionSubjects;
+import static android.os.Build.VERSION_CODES.M;
 import static com.orca.kam.rxpermission.util.PermissionUtil.REQ_CODE_PERMISSION_REQUEST;
 import static com.orca.kam.rxpermission.util.PermissionUtil.REQ_CODE_REQUEST_SETTING;
 
@@ -26,11 +28,14 @@ import static com.orca.kam.rxpermission.util.PermissionUtil.REQ_CODE_REQUEST_SET
  * @author kam6512
  * @create on 2017-05-05.
  */
+
+@TargetApi(M)
 public class PermissionFragment extends Fragment {
 
     private Permission permission;
     private DialogMessage dialogMessage;
     private DialogManager dialogManager;
+    public Map<String, PublishSubject<PermissionResult>> permissionSubjects;
 
 
     public void setPermission(Permission permission) {
@@ -40,6 +45,11 @@ public class PermissionFragment extends Fragment {
 
     public void setDialogMessage(DialogMessage dialogMessage) {
         this.dialogMessage = dialogMessage;
+    }
+
+
+    public void setPermissionSubjects(Map<String, PublishSubject<PermissionResult>> permissionSubjects) {
+        this.permissionSubjects = permissionSubjects;
     }
 
 
@@ -90,7 +100,6 @@ public class PermissionFragment extends Fragment {
         Flowable.fromIterable(permissionSubjects.entrySet())
                 .doOnComplete(this::finish)
                 .subscribe(entry -> entry.getValue().onNext(new PermissionResult(entry.getKey(), true)));
-        finish();
     }
 
 
@@ -106,8 +115,6 @@ public class PermissionFragment extends Fragment {
                     }
                     entry.getValue().onNext(new PermissionResult(entry.getKey(), isGranted));
                 });
-
-//        finish();
     }
 
 

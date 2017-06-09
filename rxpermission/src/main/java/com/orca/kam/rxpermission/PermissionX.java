@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.StringRes;
-import android.util.Log;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
@@ -161,8 +160,6 @@ public class PermissionX {
         }
         createPermissions();
         if (isAllGranted(context, permissionList)) {
-//            terminateLeakyObjects();
-            Log.e("isAllGranted","empty");
             return Observable.empty();
         }
         if (isAvailableInflate) {
@@ -171,7 +168,6 @@ public class PermissionX {
             startPermissionActivity();
         }
         return Observable.merge(Observable.fromIterable(permissionObservables));
-//                .doOnDispose(this::terminateLeakyObjects);
     }
 
 
@@ -204,6 +200,7 @@ public class PermissionX {
         PermissionFragment permissionFragment = createFragment(activity);
         permissionFragment.setPermission(permission);
         permissionFragment.setDialogMessage(dialogMessage);
+        permissionFragment.setPermissionSubjects(permissionSubjects);
         FragmentManager fragmentManager = activity.getFragmentManager();
         fragmentManager.beginTransaction()
                 .add(permissionFragment, TAG_FRAGMENT)
