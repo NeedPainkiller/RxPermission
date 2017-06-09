@@ -35,7 +35,7 @@ ext {
     ]
 
     V_GOOGLE = "25.2.0"
-    V_GUAVA = "19.0"
+    V_GUAVA = "22.0"
     GoogleDependencies = [
             Google_SupportV4   : "com.android.support:support-v4:$V_GOOGLE",
             Google_AppCompatV7 : "com.android.support:appcompat-v7:$V_GOOGLE",
@@ -43,7 +43,8 @@ ext {
             Google_CardView    : "com.android.support:cardview-v7:$V_GOOGLE",
             Google_RecyclerView: "com.android.support:recyclerview-v7:$V_GOOGLE",
             Google_Annotations : "com.android.support:support-annotations:$V_GOOGLE",
-            Guava              : "com.google.guava:guava:$V_GUAVA"
+            Guava              : "com.google.guava:guava:$V_GUAVA",
+            Guava_Android : "com.google.guava:guava:$V_GUAVA-android"
     ]
 
     V_DAGGER = "2.5"
