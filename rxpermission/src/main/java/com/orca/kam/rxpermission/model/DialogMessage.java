@@ -27,17 +27,6 @@ public class DialogMessage implements Parcelable {
     }
 
 
-    public DialogMessage(String explanationMessage, String explanationConfirmButtonText,
-                         String deniedMessage, String deniedCloseButtonText,
-                         String settingButtonText) {
-        this.explanationMessage = explanationMessage;
-        this.explanationConfirmButtonText = explanationConfirmButtonText;
-        this.deniedMessage = deniedMessage;
-        this.deniedCloseButtonText = deniedCloseButtonText;
-        this.settingButtonText = settingButtonText;
-    }
-
-
     public void setExplanationMessage(String explanationMessage) {
         this.explanationMessage = explanationMessage;
     }
