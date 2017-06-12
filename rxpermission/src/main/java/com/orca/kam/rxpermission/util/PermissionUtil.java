@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.reactivex.Flowable;
+
 import static android.Manifest.permission.*;
 import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -190,6 +192,15 @@ public class PermissionUtil {
             WRITE_SETTINGS,
             WRITE_SYNC_SETTINGS,
             WRITE_VOICEMAIL);
+
+
+    public static boolean isPermissionsIntegrity(List<String> permissions) {
+        List<String> filteredPermissions = Lists.newArrayList();
+        Flowable.fromIterable(permissions)
+                .filter(PERMISSIONS::contains)
+                .subscribe(filteredPermissions::add);
+        return filteredPermissions.size() == permissions.size();
+    }
 
 
     /**
