@@ -61,6 +61,7 @@ public class ExampleUnitTest {
             WRITE_CALL_LOG,
             WRITE_CONTACTS,
             WRITE_EXTERNAL_STORAGE);
+
     private final List<String> exampleDuplicatePermissions = Lists.newArrayList(
             READ_CALENDAR, WRITE_CALENDAR,
             CAMERA,
@@ -93,24 +94,48 @@ public class ExampleUnitTest {
             WRITE_CALL_LOG,
             WRITE_CONTACTS,
             WRITE_EXTERNAL_STORAGE);
+    private final List<String>  exampleFakePermissions = Lists.newArrayList(
+            ACCESS_COARSE_LOCATION,
+            ACCESS_FINE_LOCATION,
+            BODY_SENSORS,
+            CALL_PHONE,
+            CAMERA,
+            INTERNET,
+            PROCESS_OUTGOING_CALLS,
+            READ_CALENDAR,
+            READ_CALL_LOG,
+            "FAKE",
+            "FAKE",
+            "FAKE",
+            "FAKE",
+            "FAKE"
+    );
 
 
     @Test
     public void filter() {
 
-        System.out.println("TEST 1) : examplePermissions");
+        System.out.println("TEST 1 - 0) : examplePermissions");
         showLog(examplePermissions);
-        System.out.println("TEST 2) : removeDangerousItem");
+        System.out.println("TEST 1 - 1) : removeDangerousItem");
         List<String> normalPermissions = PermissionUtil.removeDangerousItem(examplePermissions);
         showLog(normalPermissions);
-        System.out.println("TEST 3) : removeSafeItem");
+        System.out.println("TEST 1 - 2) : removeSafeItem");
         List<String> dangerousPermissions = PermissionUtil.removeSafeItem(examplePermissions);
         showLog(dangerousPermissions);
-        System.out.println("TEST 4) : deduplication");
+
+        System.out.println("TEST 2 - 0) : deduplication");
         showLog(exampleDuplicatePermissions);
-        System.out.println("TEST 5) : deduplication");
+        System.out.println("TEST 2 - 1) : deduplication");
         List<String> removedDuplicateItemPermissions = PermissionUtil.deduplicateList(exampleDuplicatePermissions);
         showLog(removedDuplicateItemPermissions);
+
+        System.out.println("TEST 3 - 0) : isPermissionsIntegrity");
+        showLog(exampleFakePermissions);
+        System.out.println("TEST 3 - 1) : isPermissionsIntegrity(exampleFakePermissions) : false");
+        System.out.println(PermissionUtil.isPermissionsIntegrity(exampleFakePermissions));
+        System.out.println("TEST 3 - 1) : isPermissionsIntegrity(examplePermissions) : true");
+        System.out.println(PermissionUtil.isPermissionsIntegrity(examplePermissions));
     }
 
 
