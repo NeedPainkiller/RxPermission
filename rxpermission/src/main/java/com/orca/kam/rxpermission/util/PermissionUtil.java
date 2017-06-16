@@ -201,13 +201,16 @@ public class PermissionUtil {
                 .subscribe(filteredPermissions::add);
         return filteredPermissions.size() == permissions.size();
     }
+    public static boolean isPermissionIntegrity(String permissionName) {
+        return PERMISSIONS.contains(permissionName);
+    }
 
 
     /**
      * @param permission need to check Permission is Dangerous
      * @return is Dangerous Permission
      */
-    public static boolean isDangerousPermission(String permission) {
+    public static boolean isPermissionDangerous(String permission) {
         for (String dangerous : PERMISSIONS_DANGER) {
             if (dangerous.equals(permission)) {
                 return true;
@@ -223,7 +226,7 @@ public class PermissionUtil {
      * Filtering Normal Permission in list
      */
     public static List<String> removeSafeItem(List<String> permissions) {
-        return Lists.newArrayList(Iterables.filter(permissions, PermissionUtil::isDangerousPermission));
+        return Lists.newArrayList(Iterables.filter(permissions, PermissionUtil::isPermissionDangerous));
     }
 
 
@@ -233,7 +236,7 @@ public class PermissionUtil {
      * Filtering Dangerous Permission in list
      */
     public static List<String> removeDangerousItem(List<String> permissions) {
-        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isDangerousPermission(permission)));
+        return Lists.newArrayList(Iterables.filter(permissions, permission -> !isPermissionDangerous(permission)));
     }
 
 
