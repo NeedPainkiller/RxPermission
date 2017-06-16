@@ -12,6 +12,7 @@ import com.google.common.collect.Maps;
 import com.orca.kam.rxpermission.model.DialogMessage;
 import com.orca.kam.rxpermission.model.Permission;
 import com.orca.kam.rxpermission.model.PermissionResult;
+import com.orca.kam.rxpermission.util.PermissionUtil;
 import com.orca.kam.rxpermission.view.PermissionFragment;
 
 import java.util.ArrayList;
@@ -137,6 +138,7 @@ public class PermissionX {
 
 
     public PermissionX request(String permission) {
+        Preconditions.checkArgument(!PermissionUtil.isPermissionIntegrity(permission),permission + " is not a permission");
         permissionList.add(permission);
         return this;
     }
