@@ -1,7 +1,21 @@
-![RxPermission](https://github.com/kam6512/RxPermission/blob/master/art/title.png)
-##### RxPermission is a library that makes it easy to request Android permissions from Android 6.0 (Marshmallow, API 23) or higher
+<div align="center">
 
-[![forthebadge](http://forthebadge.com/images/badges/built-for-android.svg)](http://forthebadge.com)
+<img align="center" width="300" src="/art/title.png" alt="RxAndroid">
+
+<br>
+</div>
+
+<p align="center" color="#4169e1">
+RxPermission is a library that makes it easy to request Android permissions
+<br>
+from Android 6.0 (Marshmallow, API 23) or higher
+</p>
+
+<div align="center">
+
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/built-for-android.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
+
+</div>
 
 ## Overview
 
