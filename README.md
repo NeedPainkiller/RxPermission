@@ -3,17 +3,24 @@
 <img align="center" width="300" src="/art/title.png" alt="RxAndroid">
 
 <br>
+<br>
 </div>
 
 <p align="center" color="#4169e1">
+
+<br>
 RxPermission is a library that makes it easy to request Android permissions
 <br>
 from Android 6.0 (Marshmallow, API 23) or higher
+
 </p>
 
 <div align="center">
 
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/built-for-android.svg)](http://forthebadge.com)[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-for-android.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
 
 </div>
 
