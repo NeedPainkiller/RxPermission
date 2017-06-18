@@ -1,63 +1,69 @@
-# RxPermission
-#####RxPermission 은 안드로이드 6.0 (Marshmallow, API 23) 이상 버젼에서의 권한 승인을 더 쉽게 만들어주는 라이브러리 입니다. 
+<div align="center">
 
+<img align="center" width="300" src="/art/title.png" alt="RxAndroid">
 
+<br>
+<br>
+</div>
 
-## Setup
+<p align="center" color="#4169e1">
 
-### Gradle
+<br>
+RxPermission is a library that makes it easy to request Android permissions
+<br>
+from Android 6.0 (Marshmallow, API 23) or higher
+
+</p>
+
+<div align="center">
+
+[![forthebadge](http://forthebadge.com/images/badges/built-for-android.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/built-by-developers.svg)](http://forthebadge.com)
+[![forthebadge](http://forthebadge.com/images/badges/makes-people-smile.svg)](http://forthebadge.com)
+
+</div>
+
+## Getting Started
 
 ```java
 dependencies {
-    compile 'com.github.kam6512:RxPermission:1.0'
+    compile 'com.github.kam6512:RxPermission:1.1'
 }
 ```
 
-
-
-
-## How to use
 ```java
-public class MainActivity extends AppCompatActivity {
+private CompositeDisposable disposables = new CompositeDisposable();
 
-    private CompositeDisposable disposables = new CompositeDisposable();
-    private AndroidPermission permissionX;
+PermissionX permissionX = new PermissionX(this);
+Disposable disposable = permissionX
+	.request(READ_CALENDAR, WRITE_CALENDAR,
+		READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE,
+		CAMERA, INTERNET)
+	.requestPermission()
+	.subscribe(permissionPair -> Log.i(TAG, permissionPair.permissionName + " is " + permissionPair.isGranted),
+		throwable -> Log.i("ERROR", throwable.getMessage(),
+		() -> Log.i(TAG, "Permissions Already All Granted"));
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ...
-        permissionX = new AndroidPermission(this);
-    }
-
-    @Override protected void onDestroy() {
-        super.onDestroy();
-        ...
-        disposables.clear();
-    }
-
-    private void requestBluetoothPermission() {
-        Disposable disposable = permissionX.requestPermission(
-        CAMERA,ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION, // Dangerous Permissions
-        INTERNET // Not Dangerous Permission
-        ).subscribe(deniedPermissions -> { // When Permission (or Permissions) Denied
-            	for (String deniedPermission : deniedPermissions) {
-                	Log.d("Permission Denial",deniedPermission);
-            	}
-        	},throwable -> Log.d("ERROR",throwable.getMessage()),
-        	() -> Log.d("COMPLETE","Permissions All Granted")); // When Permission(or Permissions All) Granted
-        disposables.add(disposable);
-    }
-}
+disposables.add(disposable);
 ```
 
-## Example
-### All Permission (or Permissions) Granted
-![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20All%20Granted.gif?raw=true)
 
-### Permission (or Permissions) Denied
-![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20Denial.gif?raw=true)
+#### Requesting Permissions in Other Ways
+```java
+permissionX
+	.request(READ_CALENDAR)
+    .request(WRITE_CALENDAR)
+	.request(READ_EXTERNAL_STORAGE)
+    .request(WRITE_EXTERNAL_STORAGE)
+	.request(CAMERA)
+    .request(INTERNET)
+	.requestPermission()
+	.subscribe(permissionPair -> Log.i(TAG, permissionPair.permissionName + " is " + permissionPair.isGranted),
+		throwable -> Log.i("ERROR", throwable.getMessage(),
+		() -> Log.i(TAG, "Permissions Already All Granted"));
 
-### More, Setting
-![](https://github.com/kam6512/RxPermission/blob/master/art/AndroidPermission%20Setting.gif?raw=true)
+```
+or view [SAMPLE CODE](https://github.com/kam6512/RxPermission/tree/master/sample/src/main/java/com/orca/kam/sample) with [GIF](https://github.com/kam6512/RxPermission/tree/master/art)
 
-######## Developed by [kam6512](https://kam6512.github.io/)
+###### Developed by [kam6512](https://kam6512.github.io/)
