@@ -108,36 +108,63 @@ public class MainActivity extends AppCompatActivity implements IMain {
     private void requestBluetoothPermission() {
         PermissionX permissionX = new PermissionX(this);
         Disposable disposable = permissionX
-                .request(READ_CALENDAR)
-                .request(WRITE_CALENDAR)
-                .request(CAMERA)
-                .request(READ_CONTACTS)
-                .request(WRITE_CONTACTS)
-                .request(GET_ACCOUNTS)
-                .request(ACCESS_FINE_LOCATION)
-                .request(ACCESS_COARSE_LOCATION)
-                .request(RECORD_AUDIO)
-                .request(READ_PHONE_STATE)
-                .request(CALL_PHONE)
-                .request(READ_CALL_LOG)
-                .request(WRITE_CALL_LOG)
-                .request(ADD_VOICEMAIL)
-                .request(USE_SIP)
-                .request(PROCESS_OUTGOING_CALLS)
-                .request(BODY_SENSORS)
-                .request(SEND_SMS)
-                .request(RECEIVE_SMS)
-                .request(READ_SMS)
-                .request(RECEIVE_WAP_PUSH)
-                .request(RECEIVE_MMS)
-                .request(READ_EXTERNAL_STORAGE)
-                .request(WRITE_EXTERNAL_STORAGE)
-                .request(INTERNET)
+                .request(READ_CALENDAR,
+                        WRITE_CALENDAR,
+                        CAMERA,
+                        READ_CONTACTS,
+                        WRITE_CONTACTS,
+                        GET_ACCOUNTS,
+                        ACCESS_FINE_LOCATION,
+                        ACCESS_COARSE_LOCATION,
+                        RECORD_AUDIO,
+                        READ_PHONE_STATE,
+                        CALL_PHONE,
+                        READ_CALL_LOG,
+                        WRITE_CALL_LOG,
+                        ADD_VOICEMAIL,
+                        USE_SIP,
+                        PROCESS_OUTGOING_CALLS,
+                        BODY_SENSORS,
+                        SEND_SMS,
+                        RECEIVE_SMS,
+                        READ_SMS,
+                        RECEIVE_WAP_PUSH,
+                        RECEIVE_MMS,
+                        READ_EXTERNAL_STORAGE,
+                        WRITE_EXTERNAL_STORAGE,
+//                        "FAKE PERMISSION",
+                        INTERNET)
+//                .request(READ_CALENDAR)
+//                .request(WRITE_CALENDAR)
+//                .request(CAMERA)
+//                .request(READ_CONTACTS)
+//                .request(WRITE_CONTACTS)
+//                .request(GET_ACCOUNTS)
+//                .request(ACCESS_FINE_LOCATION)
+//                .request(ACCESS_COARSE_LOCATION)
+//                .request(RECORD_AUDIO)
+//                .request(READ_PHONE_STATE)
+//                .request(CALL_PHONE)
+//                .request(READ_CALL_LOG)
+//                .request(WRITE_CALL_LOG)
+//                .request(ADD_VOICEMAIL)
+//                .request(USE_SIP)
+//                .request(PROCESS_OUTGOING_CALLS)
+//                .request(BODY_SENSORS)
+//                .request(SEND_SMS)
+//                .request(RECEIVE_SMS)
+//                .request(READ_SMS)
+//                .request(RECEIVE_WAP_PUSH)
+//                .request(RECEIVE_MMS)
+//                .request(READ_EXTERNAL_STORAGE)
+//                .request(WRITE_EXTERNAL_STORAGE)
+//                .request(INTERNET)
+//                .request("FAKE PERMISSION")
                 .requestPermission()
                 .doOnSubscribe(disposable1 -> updateConsoleLog("Request Bluetooth Permission"))
 //                .filter(permissionPair -> !permissionPair.isGranted)
 //                .filter(permissionPair -> permissionPair.isGranted)
-                .subscribe(permissionPair -> updateConsoleLog(permissionPair.permissionName +" IS " + permissionPair.isGranted),
+                .subscribe(permissionPair -> updateConsoleLog(permissionPair.permissionName + " IS " + permissionPair.isGranted),
                         throwable -> updateConsoleLog("errorOccurred : Request Error : " + throwable.getMessage()),
                         () -> updateConsoleLog("onComplete : Permissions Already All Granted"));
         disposables.add(disposable);
