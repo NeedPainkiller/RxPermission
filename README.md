@@ -67,14 +67,20 @@ permissionX
 or view [SAMPLE CODE](https://github.com/kam6512/RxPermission/tree/master/sample/src/main/java/com/orca/kam/sample) with [GIF](https://github.com/kam6512/RxPermission/tree/master/art)
 
 ## Use Library
-
 Google - Support V4 / AppCompat V7 / Design / Guava
+
 [RxJava](https://github.com/ReactiveX/RxJava) 
+
 [RxAndroid](https://github.com/ReactiveX/RxAndroid)
+
 [afollestad.material-dialogs](https://github.com/afollestad/material-dialogs)
+
 [Hugo](https://github.com/JakeWharton/hugo)
+
 [Retrolambda](https://github.com/evant/gradle-retrolambda)
+
 [leakcanary](https://github.com/square/leakcanary)
+
 [dart](https://github.com/f2prateek/dart)
 
 
