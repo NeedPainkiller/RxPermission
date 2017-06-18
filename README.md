@@ -24,8 +24,6 @@ from Android 6.0 (Marshmallow, API 23) or higher
 
 </div>
 
-## Overview
-
 ## Getting Started
 
 ```java
