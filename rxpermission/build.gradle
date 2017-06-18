@@ -8,21 +8,20 @@ android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
 
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
     compileOptions {
         encoding = 'UTF-8'
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-
-    defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
     buildTypes {
         release {
             minifyEnabled false
@@ -68,7 +67,7 @@ dependencies {
 
     compile Google.Google_SupportV4
     compile Google.Google_AppCompatV7
-    compile Google.Guava
+    compile Google.Guava_Android
 
     compile Rx.RxJava2
     compile Rx.RxAndroid2

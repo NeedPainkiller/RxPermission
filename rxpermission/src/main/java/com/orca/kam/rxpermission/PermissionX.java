@@ -138,7 +138,7 @@ public class PermissionX {
 
 
     public PermissionX request(String permission) {
-        Preconditions.checkArgument(!PermissionUtil.isPermissionIntegrity(permission),permission + " is not a permission");
+        Preconditions.checkArgument(PermissionUtil.isPermissionIntegrity(permission), permission + " is not a permission");
         permissionList.add(permission);
         return this;
     }
@@ -150,8 +150,13 @@ public class PermissionX {
 
 
     public PermissionX request(List<String> permissions) {
-        // TODO: 2017-06 Manifest 의 permission 에  있는 값인지 확인이 필요
         permissionList.addAll(permissions);
+        return this;
+    }
+
+
+    public PermissionX clearRequests() {
+        permissionList.clear();
         return this;
     }
 
@@ -175,6 +180,7 @@ public class PermissionX {
 
     private void createPermissions() {
         permissionList = deduplicateList(permissionList);
+        Preconditions.checkArgument(PermissionUtil.isPermissionsIntegrity(permissionList), "One or more items are not PermissionName");
 
         permission = new Permission(permissionList, context.getPackageName());
         permissionSubjects = Maps.newHashMap();
@@ -186,7 +192,6 @@ public class PermissionX {
             permissionObservables.add(subject);
         }
     }
-
 
 
     private void startPermissionActivity() {
