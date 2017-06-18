@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements IMain {
 
     private void setConsole() {
         TextView console = binding.console;
-//        console.setMaxLines(25);
         console.setVerticalScrollBarEnabled(true);
         console.setMovementMethod(new ScrollingMovementMethod());
     }
@@ -132,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements IMain {
                         RECEIVE_MMS,
                         READ_EXTERNAL_STORAGE,
                         WRITE_EXTERNAL_STORAGE,
-//                        "FAKE PERMISSION",
                         INTERNET)
 //                .request(READ_CALENDAR)
 //                .request(WRITE_CALENDAR)
