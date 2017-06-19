@@ -42,7 +42,7 @@ Disposable disposable = permissionX
 		CAMERA, INTERNET)
 	.requestPermission()
 	.subscribe(permissionPair -> Log.i(TAG, permissionPair.permissionName + " is " + permissionPair.isGranted),
-		throwable -> Log.i("ERROR", throwable.getMessage(),
+		throwable -> Log.i("ERROR", throwable.getMessage()),
 		() -> Log.i(TAG, "Permissions Already All Granted"));
 
 disposables.add(disposable);
@@ -60,7 +60,7 @@ permissionX
     	.request(INTERNET)
 	.requestPermission()
 	.subscribe(permissionPair -> Log.i(TAG, permissionPair.permissionName + " is " + permissionPair.isGranted),
-		throwable -> Log.i("ERROR", throwable.getMessage(),
+		throwable -> Log.i("ERROR", throwable.getMessage()),
 		() -> Log.i(TAG, "Permissions Already All Granted"));
 
 ```
