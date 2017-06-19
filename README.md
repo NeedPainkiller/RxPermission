@@ -53,11 +53,11 @@ disposables.add(disposable);
 ```java
 permissionX
 	.request(READ_CALENDAR)
-    .request(WRITE_CALENDAR)
+   	.request(WRITE_CALENDAR)
 	.request(READ_EXTERNAL_STORAGE)
-    .request(WRITE_EXTERNAL_STORAGE)
+    	.request(WRITE_EXTERNAL_STORAGE)
 	.request(CAMERA)
-    .request(INTERNET)
+    	.request(INTERNET)
 	.requestPermission()
 	.subscribe(permissionPair -> Log.i(TAG, permissionPair.permissionName + " is " + permissionPair.isGranted),
 		throwable -> Log.i("ERROR", throwable.getMessage(),
