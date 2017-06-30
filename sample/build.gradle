@@ -32,6 +32,13 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+    mavenCentral()
+    maven { url "https://maven.google.com" }
+}
+
+
 dependencies {
     def ext = rootProject.ext;
     Map<String, String> TestDependencies = ext.TestDependencies;
@@ -42,9 +49,10 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile TestDependencies.JUnit
 
-    compile GoogleDependencies.Google_SupportV4
-    compile GoogleDependencies.Google_AppCompatV7
-    compile GoogleDependencies.Google_Design
+    compile GoogleDependencies.Google_CORE
+    compile GoogleDependencies.Google_V4_SUPPORT
+    compile GoogleDependencies.Google_V7_APPCOMPAT
+    compile GoogleDependencies.Google_DESIGN_SUPPORT
 
     compile RxDependencies.RxJava2
     compile RxDependencies.RxAndroid2

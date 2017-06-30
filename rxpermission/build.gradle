@@ -44,6 +44,7 @@ android {
 repositories {
     maven { url "https://jitpack.io" }
     mavenCentral()
+    maven { url "https://maven.google.com" }
 }
 
 dependencies {
@@ -65,9 +66,10 @@ dependencies {
     compile Injection.Henson
     provided Injection.Henson_Provide
 
-    compile Google.Google_SupportV4
-    compile Google.Google_AppCompatV7
-    compile Google.Guava_Android
+    compile Google.Google_CORE
+    compile Google.Google_V4_SUPPORT
+    compile Google.Google_V7_APPCOMPAT
+    compile Google.Google_GUAVA_ANDROID
 
     compile Rx.RxJava2
     compile Rx.RxAndroid2
